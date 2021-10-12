@@ -9,10 +9,10 @@
   "NFT_NAME": "Lord Of Eyes",
   "SYMBOL": "LOE",
   "MAX_SUPPLY": 20,
-  "WEI_COST": 20000000000000000,
-  "DISPLAY_COST": 0.02,
+  "WEI_COST": 75000000000000000,
+  "DISPLAY_COST": 0.075,
   "GAS_LIMIT": 285000,
-  "MARKETPLACE": "PaintSwap",
-  "MARKETPLACE_LINK": "https://paintswap.finance/marketplace/assets/0x33bf88Dc4f331caF70768061b64b9a9e1DE2F60e/1",
-  "SHOW_BACKGROUND": false
+  "MARKETPLACE": "Opeansea",
+  "MARKETPLACE_LINK": "https://opensea.io/collection/nerdy-coder-clones",
+  "SHOW_BACKGROUND": true
 }
