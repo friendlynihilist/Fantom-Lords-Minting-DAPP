@@ -335,7 +335,7 @@ function App() {
 
   useEffect(() => {
     getConfig();
-  }, []);
+  });
 
   useEffect(() => {
     getData();
@@ -351,6 +351,23 @@ function App() {
         image={CONFIG.SHOW_BACKGROUND ? '/config/images/bg.png' : null}
       >
         <HeaderTitle>Fantom Lords</HeaderTitle>
+
+        {/* 
+            <s.respContainer>
+              
+            <AudioPlayer
+              customAdditionalControls={[]}
+              customVolumeControls={[]}
+              showJumpControls={false}
+              layout="horizontal-reverse"
+              autoPlay
+              src={tune}
+              // other props here
+            />
+              
+            </s.respContainer> */}
+
+        {/* <StyledLogo alt={"logo"} src={"/config/images/logo.png"} /> */}
         <s.SpacerSmall />
         <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
           <s.SpacerLarge />
@@ -358,13 +375,25 @@ function App() {
             flex={1}
             jc={'center'}
             ai={'center'}
+            style={
+              {
+                // backgroundColor: "var(--accent)",
+                // padding: 24,
+                // borderRadius: 24,
+                // border: "4px dashed var(--secondary)",
+                // boxShadow: "0px 5px 11px 2px rgba(0,0,0,0.7)",
+              }
+            }
           >
             <StyledImg
               alt={'The Great Summoning'}
               src={'/config/images/ritual_template_rect.png'}
 
+              // style={{ transform: "scaleX(-1)" }}
             />
+            {/* BUTTON HERE */}
 
+            {/* BUTTON HERE */}
             <s.TextTitle
               style={{
                 textAlign: 'center',
@@ -376,7 +405,17 @@ function App() {
               {/* {data.totalSupply} / {CONFIG.MAX_SUPPLY} */}
               {data.totalSupply} / {CONFIG.MAX_SUPPLY}
             </s.TextTitle>
-
+            {/* <s.TextDescription
+              style={{
+                textAlign: "center",
+                color: "var(--primary-text)",
+              }}
+            >
+              <StyledLink target={"_blank"} href={CONFIG.SCAN_LINK}>
+                {truncate(CONFIG.CONTRACT_ADDRESS, 15)}
+              </StyledLink>
+            </s.TextDescription>
+            <s.SpacerSmall /> */}
             {Number(data.totalSupply) >= CONFIG.MAX_SUPPLY ? (
               <>
                 <s.TextTitle
@@ -384,7 +423,17 @@ function App() {
                 >
                   The Great Summoning has ended.
                 </s.TextTitle>
-
+                <StyledButton
+                  disabled={claimingNft ? 1 : 0}
+                  onClick={(e) => {
+                    testPromise();
+                    //main(blockchain.account); //blockchain.account
+                  }}
+                  // style={disabledButton}
+                >
+                  {claimingNft ? 'BUSY' : 'SUMMON NOW'}
+                  {/* {claimingNft ? "BUSY" : "NOT YET TIME"} */}
+                </StyledButton>
                 <s.TextDescription
                   style={{ textAlign: 'center', color: 'var(--accent-text)' }}
                 >

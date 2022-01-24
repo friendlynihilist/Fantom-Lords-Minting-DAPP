@@ -335,7 +335,7 @@ function App() {
 
   useEffect(() => {
     getConfig();
-  }, []);
+  });
 
   useEffect(() => {
     getData();
@@ -351,6 +351,23 @@ function App() {
         image={CONFIG.SHOW_BACKGROUND ? '/config/images/bg.png' : null}
       >
         <HeaderTitle>Fantom Lords</HeaderTitle>
+
+        {/* 
+            <s.respContainer>
+              
+            <AudioPlayer
+              customAdditionalControls={[]}
+              customVolumeControls={[]}
+              showJumpControls={false}
+              layout="horizontal-reverse"
+              autoPlay
+              src={tune}
+              // other props here
+            />
+              
+            </s.respContainer> */}
+
+        {/* <StyledLogo alt={"logo"} src={"/config/images/logo.png"} /> */}
         <s.SpacerSmall />
         <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
           <s.SpacerLarge />
