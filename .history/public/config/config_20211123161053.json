@@ -1,0 +1,18 @@
+{
+  "CONTRACT_ADDRESS": "0x3e8e2147fcD0D46E0f6e0B0EccB40F5eD39bd25e",
+  "SCAN_LINK": "https://ftmscan.com/address/0x3e8e2147fcD0D46E0f6e0B0EccB40F5eD39bd25e",
+  "NETWORK": {
+    "NAME": "Fantom Opera",
+    "SYMBOL": "FTM",
+    "ID": 250
+  },
+  "NFT_NAME": "EnrisLordsTest",
+  "SYMBOL": "ELT",
+  "MAX_SUPPLY": 3333,
+  "WEI_COST": 20000000000000000,
+  "DISPLAY_COST": 20,
+  "GAS_LIMIT": 285000,
+  "MARKETPLACE": "PaintSwap",
+  "MARKETPLACE_LINK": "https://paintswap.finance/marketplace/assets/0x33bf88Dc4f331caF70768061b64b9a9e1DE2F60e/1",
+  "SHOW_BACKGROUND": false
+}
