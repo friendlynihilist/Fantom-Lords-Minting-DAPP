@@ -1,11 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import {
   Navigation,
   Footer,
-  Army
 } from "./components";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
@@ -17,10 +15,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
     <Navigation />
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/army" element={<Army />} />
-    </Routes>
+    <App />
     <Footer />
     </Router>
   </Provider>,
