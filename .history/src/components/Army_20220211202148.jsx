@@ -4,7 +4,6 @@ import { connect } from '../redux/blockchain/blockchainActions';
 import { fetchData } from '../redux/data/dataActions';
 import * as s from '../styles/globalStyles';
 import styled from 'styled-components';
-import { Card } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlay, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -205,8 +204,6 @@ function Army() {
         MARKETPLACE_LINK: '',
         SHOW_BACKGROUND: false,
     });
-    const TOKENS_ARRAY = [];
-    const [lords, setLords] = useState(null);
 
     const getData = () => {
         if (blockchain.account !== '' && blockchain.smartContract !== null) {
@@ -235,25 +232,49 @@ function Army() {
         if (balance) { //if address owns Lord(s), then calling tokenOfOwnersByIndex is possible
 
             // PREPARING THE IDs ARRAY
+
             for (let index = 0; index < balance; index++) {
                 idsArray.push(index);
             }
 
-            await Promise.all(idsArray.map(async id => {
+            console.log(idsArray);
+
+            // CASE 1 - multiple fetch with Promise.all
+
+            // console.log(balance);
+            // const getTokenId = await blockchain.smartContract.methods.tokenOfOwnerByIndex(address.toLowerCase(), 0).call();
+            // console.log(getTokenId);
+            // const tokenUri = await blockchain.smartContract.methods.tokenURI(getTokenId).call();
+            // const response = await fetch(tokenUri.replace('ipfs://', 'https://ipfs.io/ipfs/'));
+            // const jsonifyResp = await response.json();
+            // console.log(jsonifyResp);
+
+            // console.log(idsArray);
+
+            const ids = await Promise.all(idsArray.map(async id => {
                 const getTokenId = await blockchain.smartContract.methods.tokenOfOwnerByIndex(address.toLowerCase(), id).call();
                 const tokenUri = await blockchain.smartContract.methods.tokenURI(getTokenId).call();
                 const response = await fetch(tokenUri.replace('ipfs://', 'https://ipfs.io/ipfs/'));
                 const jsonifyResp = await response.json();
-                // tokensArray.push(jsonifyResp);
-                tokensArray.push(jsonifyResp);
+                console.log(jsonifyResp.name);
             }));
-            setLords(tokensArray);
-            // console.log(tokensArray);
-            console.log(tokensArray);
-            // return TOKENS_ARRAY.map(token => {
-            //     <div>{token.name}</div>
-            // })
+            console.log(ids);
         }
+
+    }
+
+    function getTokenOfOwnerByIndex(address) {
+
+        console.log(blockchain.smartContract);
+        // let contract = '0xfee8077c909d956e9036c2d2999723931cefe548';
+        // let loweredContract = contract.toLowerCase();
+        // console.log(address);
+        let tokenBalance = blockchain.smartContract.methods.balanceOf(address.toLowerCase()).call();
+        if (tokenBalance) {
+
+        }
+        blockchain.smartContract.methods
+            .balanceOf(address.toLowerCase()).call().then((data) => console.log(data));
     }
 
     useEffect(() => {
@@ -268,11 +289,6 @@ function Army() {
         let audioRef = new Audio(tune);
         audioRef.play();
     };
-
-    // const checkArmy = () => {
-    //     !ARMY_CHECKED;
-    //     console.log(ARMY_CHECKED);
-    // }
 
 
     return (
@@ -311,11 +327,11 @@ function Army() {
                         </s.TextTitle> */}
 
                         <s.SpacerXSmall />
-                        {/* <s.TextDescription
+                        <s.TextDescription
                             style={{ textAlign: 'center', color: 'var(--accent-text)' }}
                         >
                             Lorem ipsum
-                        </s.TextDescription> */}
+                        </s.TextDescription>
                         <s.SpacerSmall />
                         {blockchain.account === '' ||
                             blockchain.smartContract === null ? (
@@ -348,78 +364,33 @@ function Army() {
                             </s.Container>
                         ) : (
                             <>
-                            {!lords ? (
-                                <>
                                 <s.TextDescription
-                                style={{
-                                    textAlign: 'center',
-                                    color: 'var(--accent-text)',
-                                }}
-                            >
-                                Click to check your Fantom Lords' army
-                            </s.TextDescription>
-                            <s.SpacerSmall />
-                            <s.Container ai={'center'} jc={'center'} fd={'row'}>
-                                <StyledButton
-                                    disabled={claimingNft ? 1 : 0}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        // claimNFTs();
-                                        // getTokenOfOwnerByIndex(blockchain.account);
-                                        listTokensOfOwner(blockchain.account);
-                                        getData();
-                                        // console.log(ARMY_CHECKED);
-                                        // checkArmy();
-                                    }}
-                                // style={disabledButton}
-                                >
-                                    {claimingNft ? 'BUSY' : 'CHECK ARMY'}
-                                    {/* {claimingNft ? "BUSY" : "NOT YET TIME"} */}
-                                </StyledButton>
-                            </s.Container>
-
-                            <s.SpacerSmall />
-                            </>
-                            ) : (
-                                <>
-                                {/* <s.TextDescription
                                     style={{
                                         textAlign: 'center',
                                         color: 'var(--accent-text)',
                                     }}
                                 >
-                                    Lorem Ipsum
-                                </s.TextDescription> */}
-                                <s.Container ai={'center'} jc={'center'} fd={'row'} style={{ display: 'flex', flexWrap: 'wrap' }}>
-
-                                
-                                    {lords.map((item,index)=>{
-                                        return <Card key={index} style={{ width: '18rem', flex: '0 0 20%', margin: '1em 20px'}}>
-                                        <Card.Img variant="top" src={(item.image).replace('ipfs://', 'https://ipfs.io/ipfs/')} />
-                                        <Card.Body>
-                                          <Card.Title>{item.name}</Card.Title>
-                                          <Card.Text>
-                                            <ul>
-                                                <li>{`${item.attributes[0].trait_type}: ${item.attributes[0].value}`}</li>
-                                                <li>{`${item.attributes[1].trait_type}: ${item.attributes[1].value}`}</li>
-                                                <li>{`${item.attributes[2].trait_type}: ${item.attributes[2].value}`}</li>
-                                                <li>{`${item.attributes[3].trait_type}: ${item.attributes[3].value}`}</li>
-                                                <li>{`${item.attributes[4].trait_type}: ${item.attributes[4].value}`}</li>
-                                                <li>{`${item.attributes[5].trait_type}: ${item.attributes[5].value}`}</li>
-                                                <li>{`${item.attributes[6].trait_type}: ${item.attributes[6].value}`}</li>
-                                            </ul>
-                                          </Card.Text>
-                                        </Card.Body>
-                                      </Card>
-                                    })}
-                                
+                                    prova
+                                </s.TextDescription>
+                                <s.SpacerSmall />
+                                <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                                    <StyledButton
+                                        disabled={claimingNft ? 1 : 0}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            // claimNFTs();
+                                            // getTokenOfOwnerByIndex(blockchain.account);
+                                            listTokensOfOwner(blockchain.account);
+                                            getData();
+                                        }}
+                                    // style={disabledButton}
+                                    >
+                                        {claimingNft ? 'BUSY' : 'CHECK ARMY'}
+                                        {/* {claimingNft ? "BUSY" : "NOT YET TIME"} */}
+                                    </StyledButton>
                                 </s.Container>
-                                </>
-                            )}
-                                
 
-                                
-
+                                <s.SpacerSmall />
                             </>
                         )}
                         <s.SpacerMedium />

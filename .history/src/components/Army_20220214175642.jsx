@@ -400,13 +400,7 @@ function Army() {
                                           <Card.Title>{item.name}</Card.Title>
                                           <Card.Text>
                                             <ul>
-                                                <li>{`${item.attributes[0].trait_type}: ${item.attributes[0].value}`}</li>
-                                                <li>{`${item.attributes[1].trait_type}: ${item.attributes[1].value}`}</li>
-                                                <li>{`${item.attributes[2].trait_type}: ${item.attributes[2].value}`}</li>
-                                                <li>{`${item.attributes[3].trait_type}: ${item.attributes[3].value}`}</li>
-                                                <li>{`${item.attributes[4].trait_type}: ${item.attributes[4].value}`}</li>
-                                                <li>{`${item.attributes[5].trait_type}: ${item.attributes[5].value}`}</li>
-                                                <li>{`${item.attributes[6].trait_type}: ${item.attributes[6].value}`}</li>
+                                                <li></li>
                                             </ul>
                                           </Card.Text>
                                         </Card.Body>

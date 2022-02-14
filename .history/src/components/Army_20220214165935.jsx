@@ -4,7 +4,7 @@ import { connect } from '../redux/blockchain/blockchainActions';
 import { fetchData } from '../redux/data/dataActions';
 import * as s from '../styles/globalStyles';
 import styled from 'styled-components';
-import { Card } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlay, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -311,11 +311,11 @@ function Army() {
                         </s.TextTitle> */}
 
                         <s.SpacerXSmall />
-                        {/* <s.TextDescription
+                        <s.TextDescription
                             style={{ textAlign: 'center', color: 'var(--accent-text)' }}
                         >
                             Lorem ipsum
-                        </s.TextDescription> */}
+                        </s.TextDescription>
                         <s.SpacerSmall />
                         {blockchain.account === '' ||
                             blockchain.smartContract === null ? (
@@ -356,7 +356,7 @@ function Army() {
                                     color: 'var(--accent-text)',
                                 }}
                             >
-                                Click to check your Fantom Lords' army
+                                premi il bottone scopri la tua army
                             </s.TextDescription>
                             <s.SpacerSmall />
                             <s.Container ai={'center'} jc={'center'} fd={'row'}>
@@ -382,37 +382,21 @@ function Army() {
                             </>
                             ) : (
                                 <>
-                                {/* <s.TextDescription
+                                <s.TextDescription
                                     style={{
                                         textAlign: 'center',
                                         color: 'var(--accent-text)',
                                     }}
                                 >
-                                    Lorem Ipsum
-                                </s.TextDescription> */}
-                                <s.Container ai={'center'} jc={'center'} fd={'row'} style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                    TITOLO
+                                </s.TextDescription>
+                                <s.Container ai={'center'} jc={'center'} fd={'row'}>
 
-                                
+                                <ul>
                                     {lords.map((item,index)=>{
-                                        return <Card key={index} style={{ width: '18rem', flex: '0 0 20%', margin: '1em 20px'}}>
-                                        <Card.Img variant="top" src={(item.image).replace('ipfs://', 'https://ipfs.io/ipfs/')} />
-                                        <Card.Body>
-                                          <Card.Title>{item.name}</Card.Title>
-                                          <Card.Text>
-                                            <ul>
-                                                <li>{`${item.attributes[0].trait_type}: ${item.attributes[0].value}`}</li>
-                                                <li>{`${item.attributes[1].trait_type}: ${item.attributes[1].value}`}</li>
-                                                <li>{`${item.attributes[2].trait_type}: ${item.attributes[2].value}`}</li>
-                                                <li>{`${item.attributes[3].trait_type}: ${item.attributes[3].value}`}</li>
-                                                <li>{`${item.attributes[4].trait_type}: ${item.attributes[4].value}`}</li>
-                                                <li>{`${item.attributes[5].trait_type}: ${item.attributes[5].value}`}</li>
-                                                <li>{`${item.attributes[6].trait_type}: ${item.attributes[6].value}`}</li>
-                                            </ul>
-                                          </Card.Text>
-                                        </Card.Body>
-                                      </Card>
+                                        return <li key={index}>{item.name} <img src={(item.image).replace('ipfs://', 'https://ipfs.io/ipfs/')}></img></li>
                                     })}
-                                
+                                </ul>
                                 </s.Container>
                                 </>
                             )}

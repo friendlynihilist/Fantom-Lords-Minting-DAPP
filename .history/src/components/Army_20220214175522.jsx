@@ -390,7 +390,7 @@ function Army() {
                                 >
                                     Lorem Ipsum
                                 </s.TextDescription> */}
-                                <s.Container ai={'center'} jc={'center'} fd={'row'} style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                <s.Container ai={'center'} jc={'start'} fd={'row'} style={{ display: 'flex', flexWrap: 'wrap', margin: '0' }}>
 
                                 
                                     {lords.map((item,index)=>{
@@ -399,15 +399,8 @@ function Army() {
                                         <Card.Body>
                                           <Card.Title>{item.name}</Card.Title>
                                           <Card.Text>
-                                            <ul>
-                                                <li>{`${item.attributes[0].trait_type}: ${item.attributes[0].value}`}</li>
-                                                <li>{`${item.attributes[1].trait_type}: ${item.attributes[1].value}`}</li>
-                                                <li>{`${item.attributes[2].trait_type}: ${item.attributes[2].value}`}</li>
-                                                <li>{`${item.attributes[3].trait_type}: ${item.attributes[3].value}`}</li>
-                                                <li>{`${item.attributes[4].trait_type}: ${item.attributes[4].value}`}</li>
-                                                <li>{`${item.attributes[5].trait_type}: ${item.attributes[5].value}`}</li>
-                                                <li>{`${item.attributes[6].trait_type}: ${item.attributes[6].value}`}</li>
-                                            </ul>
+                                            Some quick example text to build on the card title and make up the bulk of
+                                            the card's content.
                                           </Card.Text>
                                         </Card.Body>
                                       </Card>
