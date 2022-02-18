@@ -1,0 +1,21 @@
+@media only screen and (min-width: 1200px) {
+  .card {
+    color: yellow;
+  }
+}
+@media only screen and (min-width: 1024px) {
+  .card {
+    color: green;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .card {
+    color: blue;
+  }
+}
+@media only screen and (min-width: 480px) {
+  .card {
+    color: gray;
+  }
+}

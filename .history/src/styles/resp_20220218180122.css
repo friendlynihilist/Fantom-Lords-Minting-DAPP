@@ -1,0 +1,21 @@
+@media only screen and (min-width: 1200px) {
+  .card {
+    flex: '0 0 31%'
+  }
+}
+@media only screen and (min-width: 1024px) {
+  .card {
+    flex: '0 0 31%'
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .card {
+    flex: '0 0 31%'
+  }
+}
+@media only screen and (min-width: 480px) {
+  .card {
+    flex: '0 0 31%'
+  }
+}
