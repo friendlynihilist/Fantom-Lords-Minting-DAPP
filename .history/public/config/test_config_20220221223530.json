@@ -1,0 +1,18 @@
+{
+  "CONTRACT_ADDRESS": "0x875fd5E9a0Fbe0964b9104C14B3Eb033c42924f6",
+  "SCAN_LINK": "https://rinkeby.etherscan.io/address/0x875fd5e9a0fbe0964b9104c14b3eb033c42924f6",
+  "NETWORK": {
+    "NAME": "Rinkeby Testnet",
+    "SYMBOL": "ETH",
+    "ID": 4
+  },
+  "NFT_NAME": "ArcaneRelics",
+  "SYMBOL": "XRLC",
+  "MAX_SUPPLY": 3333,
+  "WEI_COST": 20000000000000000000,
+  "DISPLAY_COST": 20,
+  "GAS_LIMIT": 285000,
+  "MARKETPLACE": "PaintSwap",
+  "MARKETPLACE_LINK": "https://paintswap.finance/marketplace/assets/0xfee8077c909d956E9036c2d2999723931CeFE548/1",
+  "SHOW_BACKGROUND": false
+}
