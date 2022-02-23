@@ -424,7 +424,7 @@ function Army() {
                                 >
                                     Lorem Ipsum
                                 </s.TextDescription> */}
-                    <Row xs={1} md={2} lg={3} xl={4} xxl={5} className="g-4">
+                    <Row xs={1} md={2} lg={3} className="g-4">
                       {lords.map((item, index) => {
                         return (
                           <Col>

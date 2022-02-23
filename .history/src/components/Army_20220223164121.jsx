@@ -424,11 +424,11 @@ function Army() {
                                 >
                                     Lorem Ipsum
                                 </s.TextDescription> */}
-                    <Row xs={1} md={2} lg={3} xl={4} xxl={5} className="g-4">
+                    <Row xs={1} md={2} lg={4} className="g-4">
                       {lords.map((item, index) => {
                         return (
                           <Col>
-                            <Card key={index} style={{height: '100%'}}>
+                            <Card key={index} style={{width:'18rem', height: '100%'}}>
                               <Card.Img
                                 variant="top"
                                 src={item.image.replace(
