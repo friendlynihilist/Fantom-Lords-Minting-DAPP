@@ -187,7 +187,7 @@ function Navigation() {
             </NavLink>
           </Nav>
         </Navbar.Collapse>
-        <Navbar>
+        <Navbar.Collapse>
           <Nav>
             {blockchain.account === '' ||
               (blockchain.smartContract === null && (
@@ -222,7 +222,7 @@ function Navigation() {
                </>
               ))}
           </Nav>
-        </Navbar>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
     //     <div className="navigation">

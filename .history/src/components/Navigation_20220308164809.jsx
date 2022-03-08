@@ -25,25 +25,6 @@ export const DivTitle = styled.span`
   transition: width 0.5s;
 `;
 
-export const StyledButton = styled.button`
-  padding: 10px;
-  border: 1px solid black;
-  background-color: var(--secondary);
-  font-family: 'VCROSDMONO', monospace;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--secondary-text);
-  width: auto;
-  cursor: pointer;
-  -webkit-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
-  -moz-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
-  :active {
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-  }
-`;
-
 const iconStyle = {
   // fontFamily: 'sans-serif',
   // textAlign: 'center',
@@ -53,6 +34,7 @@ const iconStyle = {
 };
 
 function Navigation() {
+
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
@@ -98,13 +80,6 @@ function Navigation() {
     SET_CONFIG(config);
   };
 
-  function start_and_end(str) {
-    if (str.length > 10) {
-      return str.substr(0, 5) + '...' + str.substr(str.length-4, str.length);
-    }
-    return str;
-  }
-
   useEffect(() => {
     getConfig();
   }, []);
@@ -112,6 +87,7 @@ function Navigation() {
   useEffect(() => {
     getData();
   }, [blockchain.account]);
+
 
   return (
     <Navbar
@@ -129,10 +105,7 @@ function Navigation() {
           <DivTitle>Fantom Lords</DivTitle>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse
-          id="basic-navbar-nav"
-          className="justify-content-start"
-        >
+        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-start">
           <Nav>
             <Button variant="link">
               <a
@@ -146,8 +119,8 @@ function Navigation() {
                   style={{ cursor: 'pointer' }}
                 />
               </a>
-            </Button>
-            <Button variant="link">
+              </Button>
+              <Button variant="link">
               <a
                 href={'https://twitter.com/ENRINFT'}
                 target={'_blank'}
@@ -159,18 +132,14 @@ function Navigation() {
                   style={{ cursor: 'pointer' }}
                 />
               </a>
-            </Button>
+              </Button>
           </Nav>
         </Navbar.Collapse>
-        <Navbar.Collapse
-          id="basic-navbar-nav"
-          className="justify-content-end"
-          style={{
-            fontSize: '1.2rem',
-            // color: 'white !important',
-            // backgroundColor: 'var(--primary-dark)',
-          }}
-        >
+        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end" style={{
+        fontSize: '1.2rem'
+        // color: 'white !important',
+        // backgroundColor: 'var(--primary-dark)',
+      }}>
           <Nav>
             {/* <NavLink className="nav-link" to="/">
               Home
@@ -187,42 +156,6 @@ function Navigation() {
             </NavLink>
           </Nav>
         </Navbar.Collapse>
-        <Navbar>
-          <Nav>
-            {blockchain.account === '' ||
-              (blockchain.smartContract === null && (
-                <>
-                  <s.SpacerSmall />
-                  <StyledButton
-                    onClick={(e) => {
-                      // startTrack();
-                      e.preventDefault();
-                      dispatch(connect());
-                      getData();
-                    }}
-                  >
-                    ATTUNE
-                  </StyledButton>
-               </>
-              ))}
-            {blockchain.account &&
-              (blockchain.smartContract && (
-                <>
-                  <s.SpacerSmall />
-                  <StyledButton
-                    onClick={(e) => {
-                      // startTrack();
-                      e.preventDefault();
-                      dispatch(connect());
-                      getData();
-                    }}
-                  >
-                    {start_and_end(blockchain.account)}
-                  </StyledButton>
-               </>
-              ))}
-          </Nav>
-        </Navbar>
       </Container>
     </Navbar>
     //     <div className="navigation">

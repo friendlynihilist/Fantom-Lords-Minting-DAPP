@@ -87,20 +87,20 @@ export const StyledImgBak = styled.img`
 `;
 
 export const HeaderTitle = styled.span`
-  text-shadow: 2px 4px var(--secondary);
+  text-shadow: 2px 4px #6b33ee;
   text-align: center;
-  font-size: 3rem;
+  font-size: 4rem;
   color: var(--primary-text);
   font-family: 'Alagard', monospace;
   font-weight: bold;
   color: 'var(--accent-text)';
   @media (min-width: 900px) {
-    font-size: 4rem;
-    text-shadow: 2px 6px var(--secondary);
+    font-size: 5rem;
+    text-shadow: 2px 6px #6b33ee;
   }
   @media (min-width: 1000px) {
-    font-size: 5.5rem;
-    text-shadow: 2px 8px var(--secondary);
+    font-size: 8.5rem;
+    text-shadow: 2px 8px #6b33ee;
   }
   transition: width 0.5s;
 `;
@@ -178,7 +178,6 @@ function Army() {
   });
   const TOKENS_ARRAY = [];
   const [lords, setLords] = useState(null);
-  const [isChecking, setIsChecking] = useState(false);
 
   const getData = () => {
     if (blockchain.account !== '' && blockchain.smartContract !== null) {
@@ -200,7 +199,7 @@ function Army() {
   async function listTokensOfOwner(address) {
 
     // SETSTATE SPINNER TRUE
-    setIsChecking(true);
+
     // const enriAddress =
     //   '0x4a03721C829Ae3d448bF37Cac21527cbE75fc4Cb'.toLowerCase(); //remove me
     // address = enriAddress; //remove me
@@ -235,15 +234,6 @@ function Army() {
         })
       );
       // SETSTATE SPINNER FALSE
-
-      // SIMPLE SORT - ADD MORE SORTING OPTION IN THE FUTURE
-      if (tokensArray[0].edition) {
-        tokensArray = tokensArray.sort(function(obj1, obj2) {
-          return obj1.edition - obj2.edition
-        });
-      }
-      // 
-      setIsChecking(false);
       setLords(tokensArray);
       console.log(tokensArray);
     }
@@ -326,39 +316,32 @@ function Army() {
               <>
                 {!lords ? (
                   <>
-                    {/* <s.TextDescription
+                    <s.TextDescription
                       style={{
                         textAlign: 'center',
                         color: 'var(--accent-text)',
                       }}
                     >
                       Click to check your Fantom Lords' army
-                    </s.TextDescription> */}
+                    </s.TextDescription>
                     <s.SpacerSmall />
                     <s.Container ai={'center'} jc={'center'} fd={'row'}>
-                      {!isChecking && (
                       <StyledButton
                         disabled={claimingNft ? 1 : 0}
                         onClick={(e) => {
                           e.preventDefault();
+                          // claimNFTs();
+                          // getTokenOfOwnerByIndex(blockchain.account);
                           listTokensOfOwner(blockchain.account);
                           getData();
+                          // console.log(ARMY_CHECKED);
+                          // checkArmy();
                         }}
+                        // style={disabledButton}
                       >
-                        VIEW ARMY
+                        {lords ? 'CHECK ARMY' : 'LOADING'}
+                        {/* {claimingNft ? "BUSY" : "NOT YET TIME"} */}
                       </StyledButton>
-                      )}
-                      {isChecking && (
-                            <Spinner
-                              animation="border"
-                              variant="primary"
-                              role="status"
-                            >
-                              <span className="visually-hidden">
-                                Loading...
-                              </span>
-                            </Spinner>
-                          )}
                     </s.Container>
 
                     <s.SpacerSmall />
@@ -373,11 +356,11 @@ function Army() {
                                 >
                                     Lorem Ipsum
                                 </s.TextDescription> */}
-                    <Row xs={1} md={2} lg={lords.length > 1 ? 4 : ''} className="g-4">
+                    <Row xs={1} md={2} lg={3} className="g-4">
                       {lords.map((item, index) => {
                         return (
                           <Col>
-                            <Card key={index} style={{width: 'auto', height: '100%', borderRadius: '10px', backgroundColor: 'var(--primary-dark)', color: '#fff'}}>
+                            <Card key={index} style={{width: 'auto', height: '100%'}}>
                               <Card.Img
                                 variant="top"
                                 src={item.image.replace(
@@ -386,9 +369,7 @@ function Army() {
                                 )}
                               />
                               <Card.Body>
-                                <Card.Title
-                                style={{borderBottom: '1px solid #fff', paddingBottom: '5px'}}
-                                >{item.name}</Card.Title>
+                                <Card.Title>{item.name}</Card.Title>
                                 <Card.Text>
                                   <ul>
                                     <li>{`${item.attributes[0].trait_type}: ${item.attributes[0].value}`}</li>

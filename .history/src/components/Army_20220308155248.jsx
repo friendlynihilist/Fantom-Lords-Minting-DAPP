@@ -87,20 +87,20 @@ export const StyledImgBak = styled.img`
 `;
 
 export const HeaderTitle = styled.span`
-  text-shadow: 2px 4px var(--secondary);
+  text-shadow: 2px 4px #6b33ee;
   text-align: center;
-  font-size: 3rem;
+  font-size: 4rem;
   color: var(--primary-text);
   font-family: 'Alagard', monospace;
   font-weight: bold;
   color: 'var(--accent-text)';
   @media (min-width: 900px) {
-    font-size: 4rem;
-    text-shadow: 2px 6px var(--secondary);
+    font-size: 5rem;
+    text-shadow: 2px 6px #6b33ee;
   }
   @media (min-width: 1000px) {
-    font-size: 5.5rem;
-    text-shadow: 2px 8px var(--secondary);
+    font-size: 8.5rem;
+    text-shadow: 2px 8px #6b33ee;
   }
   transition: width 0.5s;
 `;
@@ -326,39 +326,32 @@ function Army() {
               <>
                 {!lords ? (
                   <>
-                    {/* <s.TextDescription
+                    <s.TextDescription
                       style={{
                         textAlign: 'center',
                         color: 'var(--accent-text)',
                       }}
                     >
                       Click to check your Fantom Lords' army
-                    </s.TextDescription> */}
+                    </s.TextDescription>
                     <s.SpacerSmall />
                     <s.Container ai={'center'} jc={'center'} fd={'row'}>
-                      {!isChecking && (
                       <StyledButton
                         disabled={claimingNft ? 1 : 0}
                         onClick={(e) => {
                           e.preventDefault();
+                          // claimNFTs();
+                          // getTokenOfOwnerByIndex(blockchain.account);
                           listTokensOfOwner(blockchain.account);
                           getData();
+                          // console.log(ARMY_CHECKED);
+                          // checkArmy();
                         }}
+                        // style={disabledButton}
                       >
-                        VIEW ARMY
+                        {lords ? 'CHECK ARMY' : 'LOADING'}
+                        {/* {claimingNft ? "BUSY" : "NOT YET TIME"} */}
                       </StyledButton>
-                      )}
-                      {isChecking && (
-                            <Spinner
-                              animation="border"
-                              variant="primary"
-                              role="status"
-                            >
-                              <span className="visually-hidden">
-                                Loading...
-                              </span>
-                            </Spinner>
-                          )}
                     </s.Container>
 
                     <s.SpacerSmall />

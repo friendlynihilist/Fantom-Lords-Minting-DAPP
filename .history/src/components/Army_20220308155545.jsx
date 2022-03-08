@@ -87,20 +87,20 @@ export const StyledImgBak = styled.img`
 `;
 
 export const HeaderTitle = styled.span`
-  text-shadow: 2px 4px var(--secondary);
+  text-shadow: 2px 4px #6b33ee;
   text-align: center;
-  font-size: 3rem;
+  font-size: 4rem;
   color: var(--primary-text);
   font-family: 'Alagard', monospace;
   font-weight: bold;
   color: 'var(--accent-text)';
   @media (min-width: 900px) {
-    font-size: 4rem;
-    text-shadow: 2px 6px var(--secondary);
+    font-size: 5rem;
+    text-shadow: 2px 6px #6b33ee;
   }
   @media (min-width: 1000px) {
-    font-size: 5.5rem;
-    text-shadow: 2px 8px var(--secondary);
+    font-size: 8.5rem;
+    text-shadow: 2px 8px #6b33ee;
   }
   transition: width 0.5s;
 `;

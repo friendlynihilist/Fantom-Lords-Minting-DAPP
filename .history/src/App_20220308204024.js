@@ -12,7 +12,6 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-h5-audio-player/lib/styles.css';
 import tune from './assets/fantomLords.mp3';
-import TypeWriterEffect from 'react-typewriter-effect';
 
 library.add(faUser);
 library.add(faDiscord);
@@ -99,17 +98,17 @@ export const StyledImgBak = styled.img`
 export const HeaderTitle = styled.span`
   text-shadow: 2px 4px var(--secondary);
   text-align: center;
-  font-size: 3rem;
+  font-size: 4rem;
   color: var(--primary-text);
   font-family: 'Alagard', monospace;
   font-weight: bold;
   color: 'var(--accent-text)';
   @media (min-width: 900px) {
-    font-size: 4rem;
+    font-size: 5rem;
     text-shadow: 2px 6px var(--secondary);
   }
   @media (min-width: 1000px) {
-    font-size: 5.5rem;
+    font-size: 8.5rem;
     text-shadow: 2px 8px var(--secondary);
   }
   transition: width 0.5s;
@@ -235,34 +234,13 @@ function App() {
     }
     setMintAmount(newMintAmount);
   };
+  const [track, setTrack] = useState(null);
 
-  const [playing, setPlaying] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const audio = useRef(new Audio(tune));
-
-  audio.current.onended = function () {
-    setPlaying(false);
+  const startTrack = () => {
+    let audioRef = new Audio(tune);
+    audioRef.play();
+    setTrack(audioRef);
   };
-
-  audio.current.onplay = function () {
-    setHasError(false);
-  };
-
-  const handleClick = () => {
-    setPlaying(playing => !playing);
-  };
-
-  useEffect(() => {
-    if (playing) {
-      audio.current.play().then(() => {
-        // Audio is playing.
-      }).catch(error => {
-        setHasError(true);
-      });
-    } else if (!hasError) {
-      audio.current.pause();
-    }
-  }, [playing, hasError]);
 
   const [fetchID, setData] = useState(null);
   const [printID, setPrint] = useState(false);
@@ -306,37 +284,20 @@ function App() {
         style={{ padding: 24, backgroundColor: 'var(--primary)' }}
         image={CONFIG.SHOW_BACKGROUND ? '/config/images/bg.png' : null}
       >
-        {/* <HeaderTitle></HeaderTitle>
+        {/* <HeaderTitle>Fantom Lords</HeaderTitle>
         <s.SpacerSmall /> */}
         <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
           <s.SpacerLarge />
-          <s.Container flex={1} jc={'center'} ai={'center'}>
+          <s.Container
+            flex={1}
+            jc={'center'}
+            ai={'center'}
+          >
             <StyledImg
               alt={'The Great Summoning'}
               src={'/config/images/ritual_banner.png'}
-              style={{ imageRendering: 'pixelated' }}
+              style={{imageRendering: 'pixelated'}}
             />
-
-            <HeaderTitle>
-              <TypeWriterEffect
-                // textStyle={{ fontFamily: 'Red Hat Display' }}
-                startDelay={100}
-                cursorColor="white"
-                text="The Dungeon awaits..."
-                typeSpeed={100}
-                // scrollArea={myAppRef}
-              />
-            </HeaderTitle>
-
-            <StyledButton
-              onClick={(e) => {
-                e.preventDefault();
-                handleClick();
-              }}
-            >
-              {!playing && 'PLAY'}
-              {playing && 'PAUSE'}
-            </StyledButton>
 
             <s.TextTitle
               style={{
@@ -399,6 +360,7 @@ function App() {
                     <s.SpacerSmall />
                     <StyledButton
                       onClick={(e) => {
+                        startTrack();
                         e.preventDefault();
                         dispatch(connect());
                         getData();
@@ -506,8 +468,8 @@ function App() {
           ai={'center'}
           style={{
             // width: "90%",
-            backgroundColor: '#00000061',
-            color: 'white',
+            backgroundColor: '#00000061', 
+            color: 'white', 
             fontFamily: 'Courier New, monospace',
             textAlign: 'left',
             paddingTop: 30,
@@ -547,19 +509,18 @@ function App() {
             >
               <s.TextDescription
                 style={{
-                  textAlign: 'left',
+                  textAlign: 'left'
                 }}
               >
                 <span style={{ fontWeight: 'bold' }}>
                   Fantom Lords are an epic collection of 3333 randomly generated
                   lordly NFTs on the Fantom blockchain.
-                </span>
-              </s.TextDescription>
-              {/* <br /> */}
-              <s.TextDescription
+                </span></s.TextDescription>
+                {/* <br /> */}
+                <s.TextDescription
                 style={{
                   textAlign: 'left',
-                  paddingBottom: 20,
+                  paddingBottom: 20
                 }}
               >
                 Fantom Lords are powerful multidimensional travelers with their
@@ -580,7 +541,7 @@ function App() {
           <s.SpacerMedium />
           <s.TextDescription
             style={{
-              textAlign: 'left',
+              textAlign: 'left'
             }}
           >
             {/* {actualDate.getTime() < mintDate.getTime() ? 'NOT READY' : 'READY'} */}
@@ -590,14 +551,16 @@ function App() {
             </span>
             , including Classes, Ancestries, Weapons, Armors, Relics and more.
             They also have different rarity, and rumors say that even a few
-            Legendaries are among them... Moreover, Lords metadata are hosted on
-            IPFS, a permanent decentralised data storage, and validated on the
-            Blockchain as ERC-721 tokens on the Fantom blockchain.
+            Legendaries are among them...
+
+            Moreover, Lords metadata are hosted on IPFS, a permanent
+            decentralised data storage, and validated on the Blockchain as
+            ERC-721 tokens on the Fantom blockchain.
           </s.TextDescription>
           <s.SpacerMedium />
           <s.TextDescription
             style={{
-              textAlign: 'left',
+              textAlign: 'left'
             }}
           >
             But, most of all, Fantom Lords are{' '}
@@ -626,22 +589,20 @@ function App() {
             </span>
           </s.TextDescription>
           <s.SpacerMedium />
+          <StyledImg
+              alt={'Staking Diagram'}
+              src={'../src/assets/question_mark.png'}
+              style={{imageRendering: 'pixelated', width: '100%'}}
+            />
           <ResponsiveWrapper
             flex={1}
-            // style={{ backgroundColor: 'rgb(189, 117, 74)' }}
+            style={{ backgroundColor: 'rgb(189, 117, 74)' }}
           >
-            <s.Container
-              flex={1}
-              jc={'center'}
-              ai={'center'}
-              style={{ padding: 10 }}
-            >
-              <StyledImg
-                alt={'The Great Summoning'}
-                src={'/config/images/stakingdiagram_template.png'}
-                style={{ imageRendering: 'pixelated', width: '100%' }}
-              />
-            </s.Container>
+            <StyledImg
+              alt={'Staking Diagram'}
+              src={'../src/assets/stakingdiagram_template.png'}
+              style={{imageRendering: 'pixelated'}}
+            />
           </ResponsiveWrapper>
           <s.SpacerSmall />
           <s.TextDescription

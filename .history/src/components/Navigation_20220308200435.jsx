@@ -33,7 +33,7 @@ export const StyledButton = styled.button`
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--secondary-text);
-  width: auto;
+  width: 100px;
   cursor: pointer;
   -webkit-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
   -moz-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
@@ -187,11 +187,11 @@ function Navigation() {
             </NavLink>
           </Nav>
         </Navbar.Collapse>
-        <Navbar>
+        <Navbar.Collapse>
           <Nav>
             {blockchain.account === '' ||
               (blockchain.smartContract === null && (
-                <>
+                <s.Container ai={'center'} jc={'center'}>
                   <s.SpacerSmall />
                   <StyledButton
                     onClick={(e) => {
@@ -203,11 +203,11 @@ function Navigation() {
                   >
                     ATTUNE
                   </StyledButton>
-               </>
+                </s.Container>
               ))}
             {blockchain.account &&
               (blockchain.smartContract && (
-                <>
+                <s.Container ai={'center'} jc={'center'}>
                   <s.SpacerSmall />
                   <StyledButton
                     onClick={(e) => {
@@ -219,10 +219,10 @@ function Navigation() {
                   >
                     {start_and_end(blockchain.account)}
                   </StyledButton>
-               </>
+                </s.Container>
               ))}
           </Nav>
-        </Navbar>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
     //     <div className="navigation">

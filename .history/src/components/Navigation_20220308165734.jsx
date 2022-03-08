@@ -25,25 +25,6 @@ export const DivTitle = styled.span`
   transition: width 0.5s;
 `;
 
-export const StyledButton = styled.button`
-  padding: 10px;
-  border: 1px solid black;
-  background-color: var(--secondary);
-  font-family: 'VCROSDMONO', monospace;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--secondary-text);
-  width: auto;
-  cursor: pointer;
-  -webkit-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
-  -moz-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
-  :active {
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-  }
-`;
-
 const iconStyle = {
   // fontFamily: 'sans-serif',
   // textAlign: 'center',
@@ -97,13 +78,6 @@ function Navigation() {
     const config = await configResponse.json();
     SET_CONFIG(config);
   };
-
-  function start_and_end(str) {
-    if (str.length > 10) {
-      return str.substr(0, 5) + '...' + str.substr(str.length-4, str.length);
-    }
-    return str;
-  }
 
   useEffect(() => {
     getConfig();
@@ -187,11 +161,11 @@ function Navigation() {
             </NavLink>
           </Nav>
         </Navbar.Collapse>
-        <Navbar>
+        <Navbar.Collapse>
           <Nav>
             {blockchain.account === '' ||
               (blockchain.smartContract === null && (
-                <>
+                <s.Container ai={'center'} jc={'center'}>
                   <s.SpacerSmall />
                   <StyledButton
                     onClick={(e) => {
@@ -203,26 +177,10 @@ function Navigation() {
                   >
                     ATTUNE
                   </StyledButton>
-               </>
-              ))}
-            {blockchain.account &&
-              (blockchain.smartContract && (
-                <>
-                  <s.SpacerSmall />
-                  <StyledButton
-                    onClick={(e) => {
-                      // startTrack();
-                      e.preventDefault();
-                      dispatch(connect());
-                      getData();
-                    }}
-                  >
-                    {start_and_end(blockchain.account)}
-                  </StyledButton>
-               </>
+                </s.Container>
               ))}
           </Nav>
-        </Navbar>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
     //     <div className="navigation">

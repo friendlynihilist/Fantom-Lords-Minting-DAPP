@@ -236,33 +236,18 @@ function App() {
     setMintAmount(newMintAmount);
   };
 
-  const [playing, setPlaying] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const audio = useRef(new Audio(tune));
+  const [track, setTrack] = useState(false);
 
-  audio.current.onended = function () {
-    setPlaying(false);
-  };
-
-  audio.current.onplay = function () {
-    setHasError(false);
-  };
-
-  const handleClick = () => {
-    setPlaying(playing => !playing);
-  };
-
-  useEffect(() => {
-    if (playing) {
-      audio.current.play().then(() => {
-        // Audio is playing.
-      }).catch(error => {
-        setHasError(true);
-      });
-    } else if (!hasError) {
-      audio.current.pause();
+  const audioRef = new Audio(tune);
+  const startTrack = async () => {
+    if (!track) {
+      audioRef.play();
+      setTrack(true);
+    } else {
+      audioRef.pause();
+      setTrack(false);
     }
-  }, [playing, hasError]);
+  };
 
   const [fetchID, setData] = useState(null);
   const [printID, setPrint] = useState(false);
@@ -328,15 +313,10 @@ function App() {
               />
             </HeaderTitle>
 
-            <StyledButton
-              onClick={(e) => {
-                e.preventDefault();
-                handleClick();
-              }}
-            >
-              {!playing && 'PLAY'}
-              {playing && 'PAUSE'}
-            </StyledButton>
+            {/* <StyledButton onClick={startTrack()}>
+              {!track && 'PLAY'}
+              {track && 'PAUSE'}
+            </StyledButton> */}
 
             <s.TextTitle
               style={{

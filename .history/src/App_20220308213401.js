@@ -334,8 +334,8 @@ function App() {
                 handleClick();
               }}
             >
-              {!playing && 'PLAY'}
-              {playing && 'PAUSE'}
+              {!track && 'PLAY'}
+              {track && 'PAUSE'}
             </StyledButton>
 
             <s.TextTitle
