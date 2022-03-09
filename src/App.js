@@ -249,16 +249,19 @@ function App() {
   };
 
   const handleClick = () => {
-    setPlaying(playing => !playing);
+    setPlaying((playing) => !playing);
   };
 
   useEffect(() => {
     if (playing) {
-      audio.current.play().then(() => {
-        // Audio is playing.
-      }).catch(error => {
-        setHasError(true);
-      });
+      audio.current
+        .play()
+        .then(() => {
+          // Audio is playing.
+        })
+        .catch((error) => {
+          setHasError(true);
+        });
     } else if (!hasError) {
       audio.current.pause();
     }
@@ -313,32 +316,64 @@ function App() {
           <s.Container flex={1} jc={'center'} ai={'center'}>
             <StyledImg
               alt={'The Great Summoning'}
-              src={'/config/images/ritual_banner.png'}
+              src={'/config/images/animated_ritual.webp'}
               style={{ imageRendering: 'pixelated' }}
             />
+
+            {!playing && (
+              <>
+                <s.TextDescription
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleClick();
+                  }}
+                  style={{
+                    textAlign: 'center',
+                    color: 'var(--accent-text)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  play ♫
+                </s.TextDescription>
+              </>
+            )}
+            {playing && (
+              <>
+                <s.TextDescription
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleClick();
+                  }}
+                  style={{
+                    textAlign: 'center',
+                    color: 'var(--accent-text)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  pause ♫
+                </s.TextDescription>
+              </>
+            )}
+
+            <s.SpacerLarge />
 
             <HeaderTitle>
               <TypeWriterEffect
                 // textStyle={{ fontFamily: 'Red Hat Display' }}
                 startDelay={100}
                 cursorColor="white"
+                hideCursorAfterText="true"
                 text="The Dungeon awaits..."
                 typeSpeed={100}
                 // scrollArea={myAppRef}
               />
             </HeaderTitle>
 
-            <StyledButton
-              onClick={(e) => {
-                e.preventDefault();
-                handleClick();
-              }}
-            >
-              {!playing && 'PLAY'}
-              {playing && 'PAUSE'}
-            </StyledButton>
+            <s.SpacerLarge />
 
-            <s.TextTitle
+            <s.SpacerLarge />
+
+            {/* <s.TextTitle
               style={{
                 textAlign: 'center',
                 fontSize: 50,
@@ -346,19 +381,31 @@ function App() {
                 color: 'var(--accent-text)',
               }}
             >
-              {/* {data.totalSupply} / {CONFIG.MAX_SUPPLY} */}
               {data.totalSupply} / {CONFIG.MAX_SUPPLY}
-            </s.TextTitle>
+            </s.TextTitle> */}
 
             {Number(data.totalSupply) >= CONFIG.MAX_SUPPLY ? (
               <>
                 <s.TextTitle
                   style={{ textAlign: 'center', color: 'var(--accent-text)' }}
                 >
-                  The Great Summoning has ended.
+                  <TypeWriterEffect
+                    // textStyle={{ fontFamily: 'Red Hat Display' }}
+                    startDelay={100}
+                    cursorColor="white"
+                    hideCursorAfterText="true"
+                    multiText={[
+                      'The Great Summoning has ended',
+                      '3333 Fantom Lords were conjured',
+                      'eager to discover the truth about their past...',
+                      '',
+                    ]}
+                    typeSpeed={75}
+                    // scrollArea={myAppRef}
+                  />
                 </s.TextTitle>
 
-                <s.TextDescription
+                {/* <s.TextDescription
                   style={{ textAlign: 'center', color: 'var(--accent-text)' }}
                 >
                   You can still find vagrant Fantom Lords at:
@@ -382,7 +429,7 @@ function App() {
                   }
                 >
                   PaintSwap
-                </StyledLink>
+                </StyledLink> */}
               </>
             ) : (
               <>
@@ -423,16 +470,16 @@ function App() {
                   </s.Container>
                 ) : (
                   <>
-                    <s.TextDescription
+                    {/* <s.TextDescription
                       style={{
                         textAlign: 'center',
                         color: 'var(--accent-text)',
                       }}
                     >
                       {feedback}
-                    </s.TextDescription>
+                    </s.TextDescription> */}
                     <s.SpacerSmall />
-                    <s.TextDescription
+                    {/* <s.TextDescription
                       style={{
                         textAlign: 'center',
                         color: 'var(--accent-text)',
@@ -440,9 +487,9 @@ function App() {
                     >
                       You're summoning {mintAmount} Fantom Lord(s) for{' '}
                       {mintAmount * 20} FTM (+ gas fees).
-                    </s.TextDescription>
+                    </s.TextDescription> */}
                     <s.SpacerSmall />
-                    <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                    {/* <s.Container ai={'center'} jc={'center'} fd={'row'}>
                       <StyledRoundButton
                         style={{ lineHeight: 0.4 }}
                         disabled={claimingNft ? 1 : 0}
@@ -473,23 +520,20 @@ function App() {
                       >
                         +
                       </StyledRoundButton>
-                    </s.Container>
+                    </s.Container> */}
                     <s.SpacerSmall />
-                    <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                    {/* <s.Container ai={'center'} jc={'center'} fd={'row'}>
                       <StyledButton
                         disabled={claimingNft ? 1 : 0}
                         onClick={(e) => {
                           e.preventDefault();
                           claimNFTs();
                           getData();
-                          // console.log(blockchain.account);
                         }}
-                        // style={disabledButton}
                       >
                         {claimingNft ? 'BUSY' : 'SUMMON NOW'}
-                        {/* {claimingNft ? "BUSY" : "NOT YET TIME"} */}
                       </StyledButton>
-                    </s.Container>
+                    </s.Container> */}
                   </>
                 )}
               </>
@@ -522,7 +566,7 @@ function App() {
           }}
         >
           <s.SpacerMedium />
-          <DivTitle>Summon a Fantom Lord...</DivTitle>
+          <DivTitle>Who are Fantom Lords?</DivTitle>
           <s.SpacerMedium />
 
           <ResponsiveWrapper flex={1}>
@@ -564,19 +608,21 @@ function App() {
               >
                 Fantom Lords are powerful multidimensional travelers with their
                 own agendas of gallant quests, treacheries, warfare and galas.
-                Once conjured, they (usually) swear allegiance to their summoner
-                and master (that will be{' '}
-                <span style={{ fontStyle: 'italic' }}>you</span>). Anyhow,
-                whether you want it or not, they will take by storm the
-                Fantomverse.
+                Each Fantom Lord is magically{' '}
+                <span style={{ fontWeight: 'bold' }}>
+                  generated from over 70+ possible traits
+                </span>
+                , including Classes, Ancestries, Weapons, Armors, Relics and
+                more. Moreover, Lords metadata are
+                hosted on IPFS and
+                validated on the Blockchain as ERC-721 tokens on the Fantom
+                blockchain.
               </s.TextDescription>
               <s.SpacerMedium />
               {/* <s.SpacerSmall /> */}
             </s.Container>
           </ResponsiveWrapper>
-          <s.SpacerMedium />
-          <s.SpacerMedium />
-          <DivTitle>Attributes</DivTitle>
+          <DivTitle>How do I summon my Lord?</DivTitle>
           <s.SpacerMedium />
           <s.TextDescription
             style={{
@@ -584,15 +630,37 @@ function App() {
             }}
           >
             {/* {actualDate.getTime() < mintDate.getTime() ? 'NOT READY' : 'READY'} */}
-            Each Fantom Lord is magically{' '}
-            <span style={{ fontWeight: 'bold' }}>
-              generated from over 70+ possible traits
-            </span>
-            , including Classes, Ancestries, Weapons, Armors, Relics and more.
-            They also have different rarity, and rumors say that even a few
-            Legendaries are among them... Moreover, Lords metadata are hosted on
-            IPFS, a permanent decentralised data storage, and validated on the
-            Blockchain as ERC-721 tokens on the Fantom blockchain.
+            The original collection was launched in November of 2021, but you
+            can still find some vagrant Lord in the secondary market on{' '}
+            <StyledLink
+              target={'_blank'}
+              href={'https://nftkey.app/collections/fantomlords/'}
+            >
+              NFTKey
+            </StyledLink>
+            ,{' '}
+            <StyledLink
+              target={'_blank'}
+              href={
+                'https://paintswap.finance/marketplace/collections/0xfee8077c909d956e9036c2d2999723931cefe548'
+              }
+            >
+              PaintSwap
+            </StyledLink>{' '}
+            and others.
+          </s.TextDescription>
+          <s.SpacerMedium />
+          <s.SpacerMedium />
+          <DivTitle>What if I summon a Lord?</DivTitle>
+          <s.SpacerMedium />
+          <s.TextDescription
+            style={{
+              textAlign: 'left',
+            }}
+          >
+            Owning a Fantom Lord gives you immediate access to lordly rewards: first and foremost, you gain the title of
+            Gallant Lord and could join our The Guild DAO in order to participate to major exclusive events, giveaway and collective
+            decentralised world-building.
           </s.TextDescription>
           <s.SpacerMedium />
           <s.TextDescription
@@ -600,7 +668,27 @@ function App() {
               textAlign: 'left',
             }}
           >
-            But, most of all, Fantom Lords are{' '}
+            Additionally, you gain access to The Stronghold, our staking platform (see below). Send your Lord to a quest and receive daily yield in Arcane Relics
+            ($XRLC). Buy and collect Artifacts, or burn them to make your Lords ascend and become super-cool powerhouses (April 2022).
+           
+          </s.TextDescription>
+          <s.SpacerMedium />
+          <s.TextDescription
+            style={{
+              textAlign: 'left',
+            }}
+          >
+            Last but not least, you will be eligible to join the closed-beta of the first Fantom dungeon-crawler Play2Earn game (June 2022). Delve deeper into The Maze,
+            level up your Lords, unleash deadly spells and call forth the power of Fantom to defeat your foes and gain REAL loot!
+           
+          </s.TextDescription>
+          <s.SpacerMedium />
+          <s.TextDescription
+            style={{
+              textAlign: 'left',
+            }}
+          >
+            But, most of all, have fun. Fantom Lords are{' '}
             <span style={{ fontWeight: 'bold' }}>
               an ode to the "days of high adventure"
             </span>{' '}
@@ -611,7 +699,7 @@ function App() {
           <s.SpacerLarge />
 
           <s.SpacerLarge />
-          <DivTitle>Prophecy &amp; Roadmap</DivTitle>
+          <DivTitle>Future Plans</DivTitle>
           <s.SpacerMedium />
           <s.TextDescription
             style={{
@@ -634,7 +722,7 @@ function App() {
               flex={1}
               jc={'center'}
               ai={'center'}
-              style={{ padding: 10 }}
+              style={{ padding: 10, borderTop: '2px solid #fff' }}
             >
               <StyledImg
                 alt={'The Great Summoning'}
@@ -643,29 +731,6 @@ function App() {
               />
             </s.Container>
           </ResponsiveWrapper>
-          <s.SpacerSmall />
-          <s.TextDescription
-            style={{
-              textAlign: 'center',
-              width: '90%',
-            }}
-          >
-            {/* {actualDate.getTime() < mintDate.getTime() ? 'NOT READY' : 'READY'} */}
-            <span style={{ fontStyle: 'italic' }}>
-              {' '}
-              <span style={{ fontWeight: 'bold' }}>*</span> 10% of minting
-              revenue plus 1/3 of royalties will form The Vault community
-              wallet. More info soon...
-            </span>
-            <s.SpacerSmall />
-            <span style={{ fontStyle: 'italic' }}>
-              {' '}
-              <span style={{ fontWeight: 'bold' }}></span> 3333 Fantom Lords; 63
-              to be airdropped to Fantom Specters hodlers; 57 reserved for
-              giveaways/auctions/staff; 3213 available at 20 FTM available at
-              launch.
-            </span>
-          </s.TextDescription>
           <s.SpacerSmall />
         </s.respContainer>
         {/* END SECTION */}

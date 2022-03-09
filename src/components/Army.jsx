@@ -265,7 +265,7 @@ function Army() {
         style={{ padding: 24, backgroundColor: 'var(--primary)' }}
         image={CONFIG.SHOW_BACKGROUND ? '/config/images/bg.png' : null}
       >
-        <HeaderTitle>your Army</HeaderTitle>
+        {/* <HeaderTitle>your Army</HeaderTitle> */}
         <s.SpacerSmall />
         <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
           <s.SpacerLarge />

@@ -125,7 +125,7 @@ function Navigation() {
       }}
     >
       <Container>
-        <Navbar.Brand href="/">
+        <Navbar.Brand as={NavLink} to="/">
           <DivTitle>Fantom Lords</DivTitle>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

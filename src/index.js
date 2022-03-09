@@ -6,7 +6,8 @@ import {
   Navigation,
   Footer,
   Army,
-  Stronghold
+  Stronghold,
+  Lore
 } from "./components";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
@@ -22,6 +23,7 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/army" element={<Army />} />
+      <Route path="/lore" element={<Lore />} />
       <Route path="/stronghold" element={<Stronghold />} />
     </Routes>
     <Footer />
