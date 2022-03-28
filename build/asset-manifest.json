@@ -1,29 +1,27 @@
 {
   "files": {
-    "main.css": "/static/css/main.fd1cef5f.chunk.css",
-    "main.js": "/static/js/main.a877a4fd.chunk.js",
-    "main.js.map": "/static/js/main.a877a4fd.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.23281c72.js",
-    "runtime-main.js.map": "/static/js/runtime-main.23281c72.js.map",
+    "main.css": "/static/css/main.1afaed1f.chunk.css",
+    "main.js": "/static/js/main.3d45650e.chunk.js",
+    "main.js.map": "/static/js/main.3d45650e.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.60c60cf1.js",
+    "runtime-main.js.map": "/static/js/runtime-main.60c60cf1.js.map",
     "static/css/2.82dcf51b.chunk.css": "/static/css/2.82dcf51b.chunk.css",
-    "static/js/2.4b38810c.chunk.js": "/static/js/2.4b38810c.chunk.js",
-    "static/js/2.4b38810c.chunk.js.map": "/static/js/2.4b38810c.chunk.js.map",
-    "static/js/3.80473843.chunk.js": "/static/js/3.80473843.chunk.js",
-    "static/js/3.80473843.chunk.js.map": "/static/js/3.80473843.chunk.js.map",
+    "static/js/2.04d5b9bd.chunk.js": "/static/js/2.04d5b9bd.chunk.js",
+    "static/js/2.04d5b9bd.chunk.js.map": "/static/js/2.04d5b9bd.chunk.js.map",
+    "static/js/3.89ddd161.chunk.js": "/static/js/3.89ddd161.chunk.js",
+    "static/js/3.89ddd161.chunk.js.map": "/static/js/3.89ddd161.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.82dcf51b.chunk.css.map": "/static/css/2.82dcf51b.chunk.css.map",
-    "static/css/main.fd1cef5f.chunk.css.map": "/static/css/main.fd1cef5f.chunk.css.map",
-    "static/js/2.4b38810c.chunk.js.LICENSE.txt": "/static/js/2.4b38810c.chunk.js.LICENSE.txt",
+    "static/css/main.1afaed1f.chunk.css.map": "/static/css/main.1afaed1f.chunk.css.map",
+    "static/js/2.04d5b9bd.chunk.js.LICENSE.txt": "/static/js/2.04d5b9bd.chunk.js.LICENSE.txt",
     "static/media/reset.css": "/static/media/VCROSDMono.aebb1c4b.woff",
-    "static/media/fantomLords.496265a7.mp3": "/static/media/fantomLords.496265a7.mp3",
-    "static/media/nftkey.e8443e40.svg": "/static/media/nftkey.e8443e40.svg",
-    "static/media/scroll_bg_test.ed9feace.png": "/static/media/scroll_bg_test.ed9feace.png"
+    "static/media/fantomLords.496265a7.mp3": "/static/media/fantomLords.496265a7.mp3"
   },
   "entrypoints": [
-    "static/js/runtime-main.23281c72.js",
+    "static/js/runtime-main.60c60cf1.js",
     "static/css/2.82dcf51b.chunk.css",
-    "static/js/2.4b38810c.chunk.js",
-    "static/css/main.fd1cef5f.chunk.css",
-    "static/js/main.a877a4fd.chunk.js"
+    "static/js/2.04d5b9bd.chunk.js",
+    "static/css/main.1afaed1f.chunk.css",
+    "static/js/main.3d45650e.chunk.js"
   ]
 }
