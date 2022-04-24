@@ -1269,10 +1269,10 @@ function Stronghold() {
                                     key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
                                     variant="top"
                                     src={parseInt(pool.poolId) == 1 || parseInt(pool.poolId) == 2 ? id.image.replace(
-                                      'https://gateway.pinata.cloud/ipfs/',
+                                      'ipfs://',
                                       'https://cloudflare-ipfs.com/ipfs/'
                                     ) : id.image.replace(
-                                      'ipfs://',
+                                      'https://gateway.pinata.cloud/ipfs/',
                                       'https://cloudflare-ipfs.com/ipfs/'
                                     )}
                                   />
@@ -1341,10 +1341,10 @@ function Stronghold() {
                                     key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
                                     variant="top"
                                     src={parseInt(pool.poolId) == 1 || parseInt(pool.poolId) == 2 ? id.image.replace(
-                                      'https://gateway.pinata.cloud/ipfs/',
+                                      'ipfs://',
                                       'https://cloudflare-ipfs.com/ipfs/'
                                     ) : id.image.replace(
-                                      'ipfs://',
+                                      'https://gateway.pinata.cloud/ipfs/',
                                       'https://cloudflare-ipfs.com/ipfs/'
                                     )}
                                   />
