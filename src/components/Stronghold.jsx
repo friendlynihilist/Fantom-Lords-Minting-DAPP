@@ -315,6 +315,9 @@ function Stronghold() {
       .send({
         to: CONFIG.CONTRACT_ADDRESS,
         from: blockchain.account.toLowerCase(),
+        maxPriorityFeePerGas: null,
+        maxFeePerGas: null,
+        type: '0x2'
       })
       .once('error', (err) => {
         console.log(err);
@@ -338,6 +341,9 @@ function Stronghold() {
       .send({
         to: CONFIG.CONTRACT_ADDRESS,
         from: blockchain.account.toLowerCase(),
+        maxPriorityFeePerGas: null,
+        maxFeePerGas: null,
+        type: '0x2'
       })
       .once('error', (err) => {
         console.log(err);
@@ -366,6 +372,9 @@ function Stronghold() {
       .send({
         to: CONFIG.CONTRACT_ADDRESS,
         from: blockchain.account.toLowerCase(),
+        maxPriorityFeePerGas: null,
+        maxFeePerGas: null,
+        type: '0x2'
       })
       .once('error', (err) => {
         console.log(err);
@@ -394,6 +403,10 @@ function Stronghold() {
       .send({
         to: CONFIG.CONTRACT_ADDRESS,
         from: blockchain.account.toLowerCase(),
+        // value: totalBN.toString(),
+        maxPriorityFeePerGas: 230538200000,
+        maxFeePerGas: 230538200000,
+        type: '0x2'
       })
       .once('error', (err) => {
         console.log(err);
@@ -416,6 +429,9 @@ function Stronghold() {
       .send({
         to: CONFIG.CONTRACT_ADDRESS,
         from: blockchain.account.toLowerCase(),
+        maxPriorityFeePerGas: null,
+        maxFeePerGas: null,
+        type: '0x2'
       })
       .once('error', (err) => {
         console.log(err);
@@ -453,7 +469,13 @@ function Stronghold() {
 
     await poolContract.methods
       .setApprovalForAll(CONFIG.CONTRACT_ADDRESS.toLowerCase(), true)
-      .send({ from: blockchain.account.toLowerCase() });
+      .send({
+        // to: CONFIG.CONTRACT_ADDRESS,
+        from: blockchain.account.toLowerCase(),
+        maxPriorityFeePerGas: null,
+        maxFeePerGas: null,
+        type: '0x2'
+      });
     setApproval(true);
     testPoolInfo();
     setIsDoingTransaction(false);
@@ -546,6 +568,8 @@ function Stronghold() {
 
           const web3 = new Web3(window.ethereum);
           await window.ethereum.enable();
+          await web3.eth.getBlock("pending").then((block) => console.log("baseFee", Number(block.baseFeePerGas)));
+          await web3.eth.estimateGas({})-then
           const poolContract = new web3.eth.Contract(poolAbi, nftAddress);
           const poolName = await poolContract.methods.name().call();
           const balanceOf = await poolContract.methods

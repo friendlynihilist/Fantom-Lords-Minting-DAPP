@@ -197,9 +197,9 @@ function Navigation() {
               Home
               <span className="sr-only">(current)</span>
             </NavLink> */}
-            {/* <NavLink className="nav-link" to="/army">
+            <NavLink className="nav-link" to="/army">
               Army
-            </NavLink> */}
+            </NavLink>
             <NavLink className="nav-link" to="/lore">
               Lore
             </NavLink>
@@ -209,9 +209,9 @@ function Navigation() {
             <NavLink className="nav-link" to="/ashsmith">
               Ashsmith
             </NavLink>
-            <NavLink className="nav-link" to="/pyre">
+            {/* <NavLink className="nav-link" to="/pyre">
               Pyre
-            </NavLink>
+            </NavLink> */}
           </Nav>
         </Navbar.Collapse>
         <Navbar>

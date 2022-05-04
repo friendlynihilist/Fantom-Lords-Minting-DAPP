@@ -378,7 +378,13 @@ function Ashsmith() {
 
     await XRLCContract.methods
       .approve(artifactsAddress, web3.utils.toWei('1000000','ether'))
-      .send({ from: blockchain.account.toLowerCase() });
+      .send({
+        // to: CONFIG.CONTRACT_ADDRESS,
+        from: blockchain.account.toLowerCase(),
+        maxPriorityFeePerGas: null,
+        maxFeePerGas: null,
+        type: '0x2'
+      });
     setApproval(true);
     // testPoolInfo();
     setIsDoingTransaction(false);
@@ -419,9 +425,14 @@ function Ashsmith() {
     artifactContract.methods
       .collectArtifacts(mintAmount)
       .send({
-        gasLimit: String(totalGasLimit),
-        to: CONFIG.CONTRACT_ADDRESS,
-        from: blockchain.account,
+          to: CONFIG.CONTRACT_ADDRESS,
+          from: blockchain.account.toLowerCase(),
+          maxPriorityFeePerGas: null,
+          maxFeePerGas: null,
+          type: '0x2'
+        // gasLimit: String(totalGasLimit),
+        // to: CONFIG.CONTRACT_ADDRESS,
+        // from: blockchain.account,
         // value: totalCostWei,
       })
       .once('error', (err) => {
