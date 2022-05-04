@@ -1,0 +1,18 @@
+{
+    "CONTRACT_ADDRESS": "0xd2F3A2d99EB2eE8D444d79442f7bc640A2656d34",
+    "SCAN_LINK": "https://rinkeby.etherscan.io/address/0xd2F3A2d99EB2eE8D444d79442f7bc640A2656d34",
+    "NETWORK": {
+      "NAME": "Rinkeby",
+      "SYMBOL": "XRLC",
+      "ID": 12
+    },
+    "NFT_NAME": "FTL Artifacts",
+    "SYMBOL": "ARTIFACT",
+    "MAX_SUPPLY": 10000,
+    "WEI_COST": 122000000000000000000,
+    "DISPLAY_COST": 122,
+    "GAS_LIMIT": 285000,
+    "MARKETPLACE": "Opensea",
+    "MARKETPLACE_LINK": "https://opensea.io/collection/nerdy-coder-clones",
+    "SHOW_BACKGROUND": false
+  }

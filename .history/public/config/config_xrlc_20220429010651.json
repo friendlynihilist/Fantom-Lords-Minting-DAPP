@@ -1,0 +1,19 @@
+{
+    "CONTRACT_ADDRESS": "0xE5586582E1a60E302a53e73E4FaDccAF868b459a",
+    "SCAN_LINK": "https://ftmscan.com/address/0xE5586582E1a60E302a53e73E4FaDccAF868b459a",
+    "NETWORK": {
+      "NAME": "Fantom Opera",
+      "SYMBOL": "FTM", 
+      "ID": 250
+    },
+    "NFT_NAME": "Arcane Relic",
+    "SYMBOL": "XRLC",
+    "MAX_SUPPLY": 10000,
+    "WEI_COST": 122000000000000000000,
+    "DISPLAY_COST": 122,
+    "GAS_LIMIT": 285000,
+    "MARKETPLACE": "PaintSwap",
+    "MARKETPLACE_LINK": "https://paintswap.finance/marketplace/assets/0xE5586582E1a60E302a53e73E4FaDccAF868b459a/1",
+    "SHOW_BACKGROUND": false
+  }
+  

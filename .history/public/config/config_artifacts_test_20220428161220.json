@@ -1,0 +1,19 @@
+{
+    "CONTRACT_ADDRESS": "0xd2F3A2d99EB2eE8D444d79442f7bc640A2656d34",
+    "SCAN_LINK": "https://ftmscan.com/address/0xd2F3A2d99EB2eE8D444d79442f7bc640A2656d34",
+    "NETWORK": {
+      "NAME": "Fantom Opera",
+      "SYMBOL": "FTM",
+      "ID": 250
+    },
+    "NFT_NAME": "FantomLords",
+    "SYMBOL": "FTL",
+    "MAX_SUPPLY": 3333,
+    "WEI_COST": 20000000000000000000,
+    "DISPLAY_COST": 20,
+    "GAS_LIMIT": 285000,
+    "MARKETPLACE": "PaintSwap",
+    "MARKETPLACE_LINK": "https://paintswap.finance/marketplace/assets/0xd2F3A2d99EB2eE8D444d79442f7bc640A2656d34/1",
+    "SHOW_BACKGROUND": false
+  }
+  

@@ -1,0 +1,19 @@
+{
+    "CONTRACT_ADDRESS": "0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11",
+    "SCAN_LINK": "https://ftmscan.com/address/0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11",
+    "NETWORK": {
+      "NAME": "Fantom Opera",
+      "SYMBOL": "FTM", 
+      "ID": 250
+    },
+    "NFT_NAME": "FTL Artifacts",
+    "SYMBOL": "ARTIFACT",
+    "MAX_SUPPLY": 10000,
+    "WEI_COST": 122000000000000000000,
+    "DISPLAY_COST": 122,
+    "GAS_LIMIT": 285000,
+    "MARKETPLACE": "PaintSwap",
+    "MARKETPLACE_LINK": "https://paintswap.finance/marketplace/assets/0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11/1",
+    "SHOW_BACKGROUND": false
+  }
+  
