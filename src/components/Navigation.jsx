@@ -209,9 +209,9 @@ function Navigation() {
             <NavLink className="nav-link" to="/ashsmith">
               Ashsmith
             </NavLink>
-            {/* <NavLink className="nav-link" to="/pyre">
+            <NavLink className="nav-link" to="/pyre">
               Pyre
-            </NavLink> */}
+            </NavLink>
           </Nav>
         </Navbar.Collapse>
         <Navbar>

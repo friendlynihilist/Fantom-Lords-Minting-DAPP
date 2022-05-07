@@ -933,7 +933,7 @@ function Ashsmith() {
                           onClick={(e) => {
                             e.preventDefault();
                             listTokensOfOwner(blockchain.account);
-                            getData();
+                            // getData();
                           }}
                         >
                           VIEW ARTIFACTS
@@ -993,7 +993,7 @@ function Ashsmith() {
                                   variant="top"
                                   src={item.image.replace(
                                     'ipfs://',
-                                    'https://cloudflare-ipfs.com/ipfs/'
+                                    'https://gateway.pinata.cloud/ipfs/'
                                   )}
                                 />
                                 <Card.Body>

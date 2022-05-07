@@ -5,7 +5,16 @@ import { fetchData } from '../redux/data/dataActions';
 import * as s from '../styles/globalStyles';
 import styled from 'styled-components';
 import Web3 from 'web3';
-import { Nav, Card, Button, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import {
+  Nav,
+  Card,
+  Button,
+  Row,
+  Col,
+  Spinner,
+  Alert,
+  Modal,
+} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-h5-audio-player/lib/styles.css';
 import tune from '../assets/ashsmith.mp3';
@@ -159,6 +168,8 @@ function Pyre() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
   const [claimingNft, setClaimingNft] = useState(false);
+  const [selectingLord, setSelectingLord] = useState(false);
+  const [selectingArtifact, setSelectingArtifact] = useState(false);
   const [feedback, setFeedback] = useState(``);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
@@ -181,6 +192,7 @@ function Pyre() {
   });
   const TOKENS_ARRAY = [];
   const [lords, setLords] = useState(null);
+  const [selectedLordForBurning, setSelectedLordForBurning] = useState(null);
   const [isChecking, setIsChecking] = useState(false);
   const [ownedXRLC, setOwnedXRLC] = useState(false);
   const [approvalInfo, setApproval] = useState(false);
@@ -262,6 +274,204 @@ function Pyre() {
     );
   }
 
+  function LordModalDismissible() {
+    // const [show, setShow] = useState(true);
+
+    // qui andranno tutte le chiamate per la collezione
+
+    return (
+      <>
+        <s.Container
+          ai={'center'}
+          jc={'center'}
+          style={{
+            border: '2px inset #f7c33d',
+            // borderRadius: '10px',
+            // padding: '30px',
+            width: '302px',
+            height: '302px',
+            marginBottom: '30px',
+            backgroundColor: '#1a192a',
+            cursor: 'pointer',
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            setSelectingLord(true);
+            listTokensOfOwner(blockchain.account);
+          }}
+        >
+          {selectedLordForBurning && (
+              <StyledImg
+              alt={'Selected Fantom Lord'}
+              src={selectedLordForBurning.uri}
+              style={{ imageRendering: 'pixelated', maxWidth: '300px' }}
+            />
+            )}
+            {!selectedLordForBurning && (
+              <s.TextDescription
+              style={{
+                textAlign: 'center',
+                color: 'var(--accent-text)',
+                fontSize: '1.2rem',
+              }}
+            >
+              Insert Lord
+            </s.TextDescription>
+            )}
+        </s.Container>
+
+        <Modal
+          show={selectingLord}
+          onHide={() => {
+            setSelectingLord(false);
+          }}
+          style={{
+            // border: '2px inset #f7c33d',
+            // borderRadius: '10px',
+            // padding: '30px',
+            // width: '302px',
+            // height: '302px',
+            // marginBottom: '30px',
+            // backgroundColor: '#1a192a',
+            // cursor: 'pointer',
+          }}
+          // dialogClassName="modal-90w"
+          // aria-labelledby="example-custom-modal-styling-title"
+        >
+          <Modal.Header closeButton><Modal.Title id="example-custom-modal-styling-title">
+            Select a Fantom Lord
+          </Modal.Title></Modal.Header>
+          {!lords ? (
+                  <>
+                    <s.SpacerSmall />
+                    <s.Container
+                      ai={'center'}
+                      jc={'center'}
+                      fd={'row'}
+                      style={{
+                        border: '1px solid var(--secondary)',
+                        borderRadius: '10px',
+                        padding: '30px',
+                        width: 'auto',
+                      }}
+                    >
+                      {isChecking && (
+                        <Spinner
+                          animation="border"
+                          variant="primary"
+                          role="status"
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      )}
+                    </s.Container>
+
+                    <s.SpacerSmall />
+                  </>
+                ) : (
+                  <>
+                    {!lords.length ? (
+                      <s.Container ai={'center'} jc={'center'}>
+                        <s.SpacerSmall />
+                        <s.TextDescription
+                          style={{
+                            textAlign: 'center',
+                            color: 'var(--accent-text)',
+                          }}
+                        >
+                          You don't seem to have any Artifact with you.
+                          <br />
+                          The Ashsmith may help you, if you're willing to offer
+                          something in turn...
+                        </s.TextDescription>
+                      </s.Container>
+                    ) : (
+                      <Row
+                        xs={1}
+                        md={2}
+                        lg={lords.length > 1 ? 4 : ''}
+                        className="g-4"
+                      >
+                        {lords.map((item, index) => {
+                          return (
+                            <Col>
+                              <Card
+                                key={index}
+                                style={{
+                                  width: 'auto',
+                                  height: '100%',
+                                  borderRadius: '10px',
+                                  backgroundColor: 'var(--primary-dark)',
+                                  color: '#fff',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  updateLordForBurning(item.edition, item.image.replace(
+                                    'ipfs://',
+                                    'https://gateway.pinata.cloud/ipfs/'
+                                  ));
+                                  setSelectingLord(false);
+                                }}
+                              >
+                                <Card.Img
+                                  variant="top"
+                                  src={item.image.replace(
+                                    'ipfs://',
+                                    'https://gateway.pinata.cloud/ipfs/'
+                                  )}
+                                />
+                                <Card.Body>
+                                  <Card.Title
+                                    style={{
+                                      // borderBottom: '1px solid #fff',
+                                      // paddingBottom: '5px',
+                                      fontSize: '0.8rem'
+                                    }}
+                                  >
+                                    {item.name}
+                                  </Card.Title>
+                                  {/* <Card.Text>
+                                    <ul>
+                                      <li>{`${item.attributes[0].trait_type}: ${item.attributes[0].value}`}</li>
+                                      <li>{`${item.attributes[1].trait_type}: ${item.attributes[1].value}`}</li>
+                                      <li>{`${item.attributes[2].trait_type}: ${item.attributes[2].value}`}</li>
+                                      <li>{`${item.attributes[3].trait_type}: ${item.attributes[3].value}`}</li>
+                                      <li>{`${item.attributes[4].trait_type}: ${item.attributes[4].value}`}</li>
+                                      <li>{`${item.attributes[5].trait_type}: ${item.attributes[5].value}`}</li>
+                                      <li>{`${item.attributes[6].trait_type}: ${item.attributes[6].value}`}</li>
+                                    </ul>
+                                  </Card.Text> */}
+                                </Card.Body>
+                              </Card>
+                            </Col>
+                          );
+                        })}
+                      </Row>
+                    )}
+                    {/* <s.TextDescription
+                                    style={{
+                                        textAlign: 'center',
+                                        color: 'var(--accent-text)',
+                                    }}
+                                >
+                                    Lorem Ipsum
+                                </s.TextDescription> */}
+                  </>
+                )}
+        </Modal>
+      </>
+    );
+  }
+
+  const updateLordForBurning = async (_id, uri) => {
+    const lordForBurning = {
+      id: _id,
+      uri: uri
+    }
+    setSelectedLordForBurning(lordForBurning);
+  }
+
   const updateData = async () => {
     updatePrice(1);
     checkApproval();
@@ -286,7 +496,7 @@ function Pyre() {
       .call();
 
     setOwnedXRLC(balanceOfXRLC);
-  }
+  };
 
   const updatePrice = async (amount) => {
     const abiResponse = await fetch('/config/abi_artifacts.json', {
@@ -331,12 +541,10 @@ function Pyre() {
 
     const web3 = new Web3(window.ethereum);
     await window.ethereum.enable();
-    const XRLCContract = new web3.eth.Contract(
-      XRLCAbi,
-      XRLCAddress
-    );
+    const XRLCContract = new web3.eth.Contract(XRLCAbi, XRLCAddress);
 
-    const artifactsAddress = '0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11'.toLowerCase();
+    const artifactsAddress =
+      '0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11'.toLowerCase();
 
     const approval = await XRLCContract.methods
       .allowance(blockchain.account.toLowerCase(), artifactsAddress)
@@ -345,12 +553,12 @@ function Pyre() {
     console.log(approval);
 
     let confirmApprove = true;
-      if (approval == 0) {
-        confirmApprove = false;
-      }
+    if (approval == 0) {
+      confirmApprove = false;
+    }
 
-      setApproval(confirmApprove);
-  }
+    setApproval(confirmApprove);
+  };
 
   const testSetApprovalForAll = async () => {
     setFeedback(`You're approving XRLC...`);
@@ -368,16 +576,13 @@ function Pyre() {
 
     const web3 = new Web3(window.ethereum);
     await window.ethereum.enable();
-    const XRLCContract = new web3.eth.Contract(
-      XRLCAbi,
-      XRLCAddress
-    );
+    const XRLCContract = new web3.eth.Contract(XRLCAbi, XRLCAddress);
 
-    const artifactsAddress = '0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11'.toLowerCase();
-
+    const artifactsAddress =
+      '0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11'.toLowerCase();
 
     await XRLCContract.methods
-      .approve(artifactsAddress, web3.utils.toWei('1000000','ether'))
+      .approve(artifactsAddress, web3.utils.toWei('1000000', 'ether'))
       .send({ from: blockchain.account.toLowerCase() });
     setApproval(true);
     // testPoolInfo();
@@ -432,7 +637,9 @@ function Pyre() {
       .then((receipt) => {
         console.log(receipt);
         setFeedback(
-          `Your Artifact${mintAmount > 1 ? 's are' : 'is'} finally redeemed from the ashes!`
+          `Your Artifact${
+            mintAmount > 1 ? 's are' : 'is'
+          } finally redeemed from the ashes!`
         );
         setClaimingNft(false);
         dispatch(fetchData(blockchain.account));
@@ -726,7 +933,7 @@ function Pyre() {
                         // scrollArea={myAppRef}
                       />
                     </s.TextDescription>
-                    
+
                     <s.SpacerMedium />
                     <s.Container
                       ai={'center'}
@@ -737,189 +944,39 @@ function Pyre() {
                       }}
                     >
                       <Row>
-                          <Col>
-                        <s.Container
-                          ai={'center'}
-                          jc={'center'}
-                          style={{
-                            border: '2px inset #f7c33d',
-                            // borderRadius: '10px',
-                            padding: '30px',
-                            width: 'auto',
-                            height: '100%',
-                            marginBottom: '30px',
-                            backgroundColor: '#1a192a'
-                          }}
-                        >
-                          <s.TextDescription
+                        <Col>
+                          <LordModalDismissible />
+                        </Col>
+                        <Col>
+                          <s.Container
+                            ai={'center'}
+                            jc={'center'}
                             style={{
-                              textAlign: 'center',
-                              color: 'var(--accent-text)',
-                              fontSize: '1.2rem',
+                              border: '1px solid var(--secondary)',
+                              borderRadius: '10px',
+                              padding: '30px',
+                              height: '100%',
+                              width: 'auto',
+                              marginBottom: '30px',
                             }}
                           >
-                            Insert Lord
-                          </s.TextDescription>
-                        </s.Container>
-                          </Col>
-                          <Col>
-                        <s.Container ai={'center'}
-                          jc={'center'}
-                          style={{
-                            border: '1px solid var(--secondary)',
-                            borderRadius: '10px',
-                            padding: '30px',
-                            height: '100%',
-                            width: 'auto',
-                            marginBottom: '30px',
-                          }}>
-                          <s.TextDescription
-                            style={{
-                              textAlign: 'center',
-                              color: 'var(--accent-text)',
-                              fontSize: '1.2rem',
-                            }}
-                          >
-                            Insert Artifact
-                          </s.TextDescription>
-                        </s.Container>
-                          </Col>
-                        </Row>
+                            <s.TextDescription
+                              style={{
+                                textAlign: 'center',
+                                color: 'var(--accent-text)',
+                                fontSize: '1.2rem',
+                              }}
+                            >
+                              Insert Artifact
+                            </s.TextDescription>
+                          </s.Container>
+                        </Col>
+                      </Row>
                     </s.Container>
-                    
                   </>
                 )}
 
                 <s.SpacerLarge />
-                {!lords ? (
-                  <>
-                    {/* <s.TextDescription
-                      style={{
-                        textAlign: 'center',
-                        color: 'var(--accent-text)',
-                      }}
-                    >
-                      Click to check your Fantom Lords' army
-                    </s.TextDescription> */}
-                    <s.SpacerSmall />
-                    <s.Container
-                      ai={'center'}
-                      jc={'center'}
-                      fd={'row'}
-                      style={{
-                        border: '1px solid var(--secondary)',
-                        borderRadius: '10px',
-                        padding: '30px',
-                        width: 'auto',
-                      }}
-                    >
-                      {!isChecking && (
-                        <StyledButton
-                          style={{ fontSize: '1.5rem' }}
-                          disabled={claimingNft ? 1 : 0}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            listTokensOfOwner(blockchain.account);
-                            getData();
-                          }}
-                        >
-                          VIEW LORDS
-                        </StyledButton>
-                      )}
-                      {isChecking && (
-                        <Spinner
-                          animation="border"
-                          variant="primary"
-                          role="status"
-                        >
-                          <span className="visually-hidden">Loading...</span>
-                        </Spinner>
-                      )}
-                    </s.Container>
-
-                    <s.SpacerSmall />
-                  </>
-                ) : (
-                  <>
-                    {!lords.length ? (
-                      <s.Container ai={'center'} jc={'center'}>
-                        <s.SpacerSmall />
-                        <s.TextDescription
-                          style={{
-                            textAlign: 'center',
-                            color: 'var(--accent-text)',
-                          }}
-                        >
-                          You don't seem to have any Artifact with you.
-                          <br />
-                          The Ashsmith may help you, if you're willing to offer
-                          something in turn...
-                        </s.TextDescription>
-                      </s.Container>
-                    ) : (
-                      <Row
-                        xs={1}
-                        md={2}
-                        lg={lords.length > 1 ? 4 : ''}
-                        className="g-4"
-                      >
-                        {lords.map((item, index) => {
-                          return (
-                            <Col>
-                              <Card
-                                key={index}
-                                style={{
-                                  width: 'auto',
-                                  height: '100%',
-                                  borderRadius: '10px',
-                                  backgroundColor: 'var(--primary-dark)',
-                                  color: '#fff',
-                                }}
-                              >
-                                <Card.Img
-                                  variant="top"
-                                  src={item.image.replace(
-                                    'ipfs://',
-                                    'https://cloudflare-ipfs.com/ipfs/'
-                                  )}
-                                />
-                                <Card.Body>
-                                  <Card.Title
-                                    style={{
-                                      borderBottom: '1px solid #fff',
-                                      paddingBottom: '5px',
-                                    }}
-                                  >
-                                    {item.name}
-                                  </Card.Title>
-                                  <Card.Text>
-                                    <ul>
-                                      <li>{`${item.attributes[0].trait_type}: ${item.attributes[0].value}`}</li>
-                                      <li>{`${item.attributes[1].trait_type}: ${item.attributes[1].value}`}</li>
-                                      <li>{`${item.attributes[2].trait_type}: ${item.attributes[2].value}`}</li>
-                                      <li>{`${item.attributes[3].trait_type}: ${item.attributes[3].value}`}</li>
-                                      <li>{`${item.attributes[4].trait_type}: ${item.attributes[4].value}`}</li>
-                                      <li>{`${item.attributes[5].trait_type}: ${item.attributes[5].value}`}</li>
-                                      <li>{`${item.attributes[6].trait_type}: ${item.attributes[6].value}`}</li>
-                                    </ul>
-                                  </Card.Text>
-                                </Card.Body>
-                              </Card>
-                            </Col>
-                          );
-                        })}
-                      </Row>
-                    )}
-                    {/* <s.TextDescription
-                                    style={{
-                                        textAlign: 'center',
-                                        color: 'var(--accent-text)',
-                                    }}
-                                >
-                                    Lorem Ipsum
-                                </s.TextDescription> */}
-                  </>
-                )}
                 
               </>
             )}

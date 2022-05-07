@@ -569,7 +569,7 @@ function Stronghold() {
           const web3 = new Web3(window.ethereum);
           await window.ethereum.enable();
           await web3.eth.getBlock("pending").then((block) => console.log("baseFee", Number(block.baseFeePerGas)));
-          await web3.eth.estimateGas({})-then
+          // await web3.eth.estimateGas({})-then
           const poolContract = new web3.eth.Contract(poolAbi, nftAddress);
           const poolName = await poolContract.methods.name().call();
           const balanceOf = await poolContract.methods
@@ -673,10 +673,11 @@ function Stronghold() {
                         .tokenURI(_tindex)
                         .call();
                       const response = await fetch(
-                        tokenUri.replace(
-                          'https://gateway.pinata.cloud/ipfs/',
-                          'https://cloudflare-ipfs.com/ipfs/'
-                        )
+                        tokenUri
+                        // .replace(
+                        //   'https://gateway.pinata.cloud/ipfs/',
+                        //   'https://cloudflare-ipfs.com/ipfs/'
+                        // )
                       );
                       let jsonifyResp = await response.json();
                       jsonifyResp.tokenId = _tindex;
@@ -701,7 +702,7 @@ function Stronghold() {
                       const response = await fetch(
                         tokenUri.replace(
                           'ipfs://',
-                          'https://cloudflare-ipfs.com/ipfs/'
+                          'https://gateway.pinata.cloud/ipfs/'
                         )
                       );
                       let jsonifyResp = await response.json();
@@ -1570,10 +1571,11 @@ function Stronghold() {
                                       src={
                                         parseInt(pool.poolId) == 1 ||
                                         parseInt(pool.poolId) == 2
-                                          ? id.image.replace(
-                                              'https://gateway.pinata.cloud/ipfs/',
-                                              'https://cloudflare-ipfs.com/ipfs/'
-                                            )
+                                          ? id.image
+                                          // .replace(
+                                          //     'https://gateway.pinata.cloud/ipfs/',
+                                          //     'https://cloudflare-ipfs.com/ipfs/'
+                                          //   )
                                           : id.image.replace(
                                               'ipfs://',
                                               'https://cloudflare-ipfs.com/ipfs/'
@@ -1694,10 +1696,11 @@ function Stronghold() {
                                       src={
                                         parseInt(pool.poolId) == 1 ||
                                         parseInt(pool.poolId) == 2
-                                          ? id.image.replace(
-                                              'https://gateway.pinata.cloud/ipfs/',
-                                              'https://cloudflare-ipfs.com/ipfs/'
-                                            )
+                                          ? id.image
+                                          // .replace(
+                                          //     'https://gateway.pinata.cloud/ipfs/',
+                                          //     'https://cloudflare-ipfs.com/ipfs/'
+                                          //   )
                                           : id.image.replace(
                                               'ipfs://',
                                               'https://cloudflare-ipfs.com/ipfs/'
