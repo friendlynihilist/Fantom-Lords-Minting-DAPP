@@ -3,7 +3,7 @@ import * as s from '../styles/globalStyles';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlay, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faUser, faBook } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
@@ -194,76 +194,105 @@ function Footer() {
       <s.Container
         flex={1}
         ai={'center'}
-        style={{ padding: 24, backgroundColor: 'var(--primary)' }}
+        style={{ padding: 10, backgroundColor: 'var(--primary)' }}
       >
-        <ResponsiveWrapper flex={1} style={{ padding: 40, width: '28%' }} z>
-          <s.Container
-            flex={1}
-            jc={'center'}
-            ai={'center'}
-            style={{ paddingBottom: 20 }}
-          >
-            <a
-              href={'https://t.co/yn3obeavQ1'}
-              target={'_blank'}
-              style={iconStyle}
+        <Row>
+          <Col>
+            <s.Container
+              flex={1}
+              jc={'center'}
+              ai={'center'}
+              style={{ paddingBottom: 20 }}
             >
-              <FontAwesomeIcon
-                icon={['fab', 'discord']}
-                size="2x"
-                style={{ cursor: 'pointer' }}
-              />
-            </a>
-          </s.Container>
-          <s.Container
-            flex={1}
-            jc={'center'}
-            ai={'center'}
-            style={{ paddingBottom: 20 }}
-          >
-            <a
-              href={'https://twitter.com/ENRINFT'}
-              target={'_blank'}
-              style={iconStyle}
-            >
-              <FontAwesomeIcon
-                icon={['fab', 'twitter']}
-                size="2x"
-                style={{ cursor: 'pointer' }}
-              />
-            </a>
-          </s.Container>
-          <s.Container
-            flex={1}
-            jc={'center'}
-            ai={'center'}
-            style={{ paddingBottom: 20 }}
-          >
-            <a
-              href={'https://nftkey.app/collections/fantomlords/'}
-              target={'_blank'}
-              style={iconStyle}
-            >
-              <StyledLogo style={{ width: '30px' }} src={nklogo} alt="" />
-            </a>
-          </s.Container>
-
-          <s.Container
-            flex={1}
-            jc={'center'}
-            ai={'center'}
-            style={{ paddingBottom: 20 }}
-          >
-            <a
-                href={'https://paintswap.finance/marketplace/collections/0xfee8077c909d956e9036c2d2999723931cefe548'}
+              <a
+                href={'https://t.co/yn3obeavQ1'}
                 target={'_blank'}
                 style={iconStyle}
               >
-                <StyledLogo style={{width: '30px'}} src={pslogo} alt="" />
+                <FontAwesomeIcon
+                  icon={['fab', 'discord']}
+                  size="2x"
+                  style={{ cursor: 'pointer' }}
+                />
               </a>
-          </s.Container>
+            </s.Container>
+          </Col>
+          <Col>
+            <s.Container
+              flex={1}
+              jc={'center'}
+              ai={'center'}
+              style={{ paddingBottom: 20 }}
+            >
+              <a
+                href={'https://twitter.com/ENRINFT'}
+                target={'_blank'}
+                style={iconStyle}
+              >
+                <FontAwesomeIcon
+                  icon={['fab', 'twitter']}
+                  size="2x"
+                  style={{ cursor: 'pointer' }}
+                />
+              </a>
+            </s.Container>
+          </Col>
+          <Col>
+            <s.Container
+              flex={1}
+              jc={'center'}
+              ai={'center'}
+              style={{ paddingBottom: 20 }}
+            >
+              <a
+                href={'https://fantom-lords.gitbook.io/fantomlords/welcome/greetings-summoners'}
+                target={'_blank'}
+                style={iconStyle}
+              >
+                <FontAwesomeIcon
+                  icon={faBook}
+                  size="2x"
+                  style={{ cursor: 'pointer' }}
+                />
+              </a>
+            </s.Container>
+          </Col>
+          <Col>
+            <s.Container
+              flex={1}
+              jc={'center'}
+              ai={'center'}
+              style={{ paddingBottom: 20 }}
+            >
+              <a
+                href={'https://nftkey.app/collections/fantomlords/'}
+                target={'_blank'}
+                style={iconStyle}
+              >
+                <StyledLogo style={{ width: '30px' }} src={nklogo} alt="" />
+              </a>
+            </s.Container>
+          </Col>
+          <Col>
+            <s.Container
+              flex={1}
+              jc={'center'}
+              ai={'center'}
+              style={{ paddingBottom: 20 }}
+            >
+              <a
+                href={
+                  'https://paintswap.finance/marketplace/collections/0xfee8077c909d956e9036c2d2999723931cefe548'
+                }
+                target={'_blank'}
+                style={iconStyle}
+              >
+                <StyledLogo style={{ width: '30px' }} src={pslogo} alt="" />
+              </a>
+            </s.Container>
+          </Col>
           
-        </ResponsiveWrapper>
+        </Row>
         <s.SpacerXSmall />
         <ResponsiveWrapper
           flex={1}
@@ -286,12 +315,14 @@ function Footer() {
                 color: 'var(--primary-text)',
               }}
             >
-              developed &amp; designed by 🧙 for 🧙 with ❤️
+              contact us at{' '}
+              <a href="mailto:info@fantomlords.com">info@fantomlords.com</a>
+              {/* developed &amp; designed by 🧙 for 🧙 with ❤️
               <br />
               tune by{' '}
               <a href="#" style={{ color: 'red' }}>
                 stray
-              </a>
+              </a> */}
             </s.TextDescription>
           </s.Container>
         </ResponsiveWrapper>

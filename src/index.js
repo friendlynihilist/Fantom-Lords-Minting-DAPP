@@ -24,6 +24,7 @@ ReactDOM.render(
     <Navigation />
     <Routes>
       <Route path="/" element={<App />} />
+      {/* <Route path="/army" element={<Army />} /> */}
       <Route path="/lore" element={<Lore />} />
       <Route path="/stronghold" element={<Stronghold />} />
       <Route path="/ashsmith" element={<Ashsmith />} />

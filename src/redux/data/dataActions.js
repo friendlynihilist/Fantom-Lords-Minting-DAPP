@@ -25,10 +25,11 @@ export const fetchData = () => {
   return async (dispatch) => {
     dispatch(fetchDataRequest());
     try {
-      let totalSupply = await store
-        .getState()
-        .blockchain.smartContract.methods.totalSupply()
-        .call();
+      let totalSupply = '';
+      // let totalSupply = await store
+      //   .getState()
+      //   .blockchain.smartContract.methods.totalSupply()
+      //   .call();
       // let cost = await store
       //   .getState()
       //   .blockchain.smartContract.methods.cost()
@@ -41,7 +42,7 @@ export const fetchData = () => {
         })
       );
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       dispatch(fetchDataFailed("Could not load data from contract."));
     }
   };

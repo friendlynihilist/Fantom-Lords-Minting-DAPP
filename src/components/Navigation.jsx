@@ -7,6 +7,7 @@ import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import * as s from '../styles/globalStyles';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
 import pslogo from '../assets/ps-icon.png';
 import nklogo from '../assets/nftkey-icon.png';
 import { StyledLogo } from './Stronghold';
@@ -165,6 +166,19 @@ function Navigation() {
             </Button>
             <Button variant="link">
               <a
+                href={'https://fantom-lords.gitbook.io/fantomlords/welcome/greetings-summoners'}
+                target={'_blank'}
+                style={iconStyle}
+              >
+                <FontAwesomeIcon
+                  icon={faBook}
+                  size="2x"
+                  style={{ cursor: 'pointer' }}
+                />
+              </a>
+            </Button>
+            <Button variant="link">
+              <a
                 href={'https://nftkey.app/collections/fantomlords/'}
                 target={'_blank'}
                 style={iconStyle}
@@ -197,9 +211,9 @@ function Navigation() {
               Home
               <span className="sr-only">(current)</span>
             </NavLink> */}
-            <NavLink className="nav-link" to="/army">
+            {/* <NavLink className="nav-link" to="/army">
               Army
-            </NavLink>
+            </NavLink> */}
             <NavLink className="nav-link" to="/lore">
               Lore
             </NavLink>

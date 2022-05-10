@@ -317,7 +317,7 @@ function Stronghold() {
         from: blockchain.account.toLowerCase(),
         maxPriorityFeePerGas: null,
         maxFeePerGas: null,
-        type: '0x2'
+        type: '0x2',
       })
       .once('error', (err) => {
         console.log(err);
@@ -343,7 +343,7 @@ function Stronghold() {
         from: blockchain.account.toLowerCase(),
         maxPriorityFeePerGas: null,
         maxFeePerGas: null,
-        type: '0x2'
+        type: '0x2',
       })
       .once('error', (err) => {
         console.log(err);
@@ -374,7 +374,7 @@ function Stronghold() {
         from: blockchain.account.toLowerCase(),
         maxPriorityFeePerGas: null,
         maxFeePerGas: null,
-        type: '0x2'
+        type: '0x2',
       })
       .once('error', (err) => {
         console.log(err);
@@ -406,7 +406,7 @@ function Stronghold() {
         // value: totalBN.toString(),
         maxPriorityFeePerGas: 230538200000,
         maxFeePerGas: 230538200000,
-        type: '0x2'
+        type: '0x2',
       })
       .once('error', (err) => {
         console.log(err);
@@ -431,7 +431,7 @@ function Stronghold() {
         from: blockchain.account.toLowerCase(),
         maxPriorityFeePerGas: null,
         maxFeePerGas: null,
-        type: '0x2'
+        type: '0x2',
       })
       .once('error', (err) => {
         console.log(err);
@@ -474,7 +474,7 @@ function Stronghold() {
         from: blockchain.account.toLowerCase(),
         maxPriorityFeePerGas: null,
         maxFeePerGas: null,
-        type: '0x2'
+        type: '0x2',
       });
     setApproval(true);
     testPoolInfo();
@@ -546,14 +546,18 @@ function Stronghold() {
               Number.call,
               Number
             ); // create an array with the number of staked nfts. e.g. if stakedNfts = 3 => amountArray = [0,1,2]
-            await Promise.all(
-              amountArray.map(async (_tid) => {
-                const nftIndex = await blockchain.smartContract.methods // return the nft index of the collection contract (bc it can differ from the index of the staking platform)
-                  .tokenOfOwnerByIndex(_pid, address, _tid)
-                  .call();
-                stakedNftsIndex.push(nftIndex);
-              })
-            );
+            try {
+              await Promise.all(
+                amountArray.map(async (_tid) => {
+                  const nftIndex = await blockchain.smartContract.methods // return the nft index of the collection contract (bc it can differ from the index of the staking platform)
+                    .tokenOfOwnerByIndex(_pid, address, _tid)
+                    .call();
+                  stakedNftsIndex.push(nftIndex);
+                })
+              );
+            } catch (error) {
+              console.log(error);
+            }
           }
 
           // NFTS VIEWER FUNCTION //
@@ -568,7 +572,11 @@ function Stronghold() {
 
           const web3 = new Web3(window.ethereum);
           await window.ethereum.enable();
-          await web3.eth.getBlock("pending").then((block) => console.log("baseFee", Number(block.baseFeePerGas)));
+          await web3.eth
+            .getBlock('pending')
+            .then((block) =>
+              console.log('baseFee', Number(block.baseFeePerGas))
+            );
           // await web3.eth.estimateGas({})-then
           const poolContract = new web3.eth.Contract(poolAbi, nftAddress);
           const poolName = await poolContract.methods.name().call();
@@ -635,16 +643,111 @@ function Stronghold() {
               const totalAmountArray = Array.apply(null, {
                 length: notStakedNfts,
               }).map(Number.call, Number); // create an array from the number of notStakedNfts
+
+              try {
+                await Promise.all(
+                  totalAmountArray.map(async (_tid) => {
+                    const poolNftIndex = await poolContract.methods
+                      .tokenOfOwnerByIndex(address, _tid) // return the id of every nfts that is not staked yet
+                      .call();
+
+                    // TO DO: creating an object with staked and unstaked nfts from the collection
+
+                    const tokenUri = await poolContract.methods
+                      .tokenURI(poolNftIndex)
+                      .call();
+                    const response = await fetch(
+                      tokenUri.replace(
+                        'ipfs://',
+                        'https://cloudflare-ipfs.com/ipfs/'
+                      )
+                    );
+                    let jsonifyResp = await response.json();
+                    jsonifyResp.tokenId = poolNftIndex;
+                    ownedNftsInfo.push(jsonifyResp);
+                  })
+                );
+              } catch (error) {
+                console.log(error);
+              }
+            } else if (_pid == 1 || _pid == 2) {
+              if (_pid == 1) {
+                let tokenIdsArray = [];
+                for (let index = 0; index < 64; index++) {
+                  tokenIdsArray.push(index);
+                }
+                try {
+                  await Promise.all(
+                    tokenIdsArray.map(async (_tindex) => {
+                      const ownerAddress = await poolContract.methods
+                        .ownerOf(_tindex)
+                        .call();
+                      if (
+                        ownerAddress.toLowerCase() === address.toLowerCase()
+                      ) {
+                        const tokenUri = await poolContract.methods
+                          .tokenURI(_tindex)
+                          .call();
+                        const response = await fetch(
+                          tokenUri
+                          // .replace(
+                          //   'https://gateway.pinata.cloud/ipfs/',
+                          //   'https://cloudflare-ipfs.com/ipfs/'
+                          // )
+                        );
+                        let jsonifyResp = await response.json();
+                        jsonifyResp.tokenId = _tindex;
+                        ownedNftsInfo.push(jsonifyResp);
+                      }
+                    })
+                  );
+                } catch (error) {
+                  console.log(error);
+                }
+              } else if (_pid == 2) {
+                let tokenIdsArray = [];
+                for (let index = 0; index < 96; index++) {
+                  tokenIdsArray.push(index);
+                }
+                try {
+                  await Promise.all(
+                    tokenIdsArray.map(async (_tindex) => {
+                      const ownerAddress = await poolContract.methods
+                        .ownerOf(_tindex)
+                        .call();
+                      if (
+                        ownerAddress.toLowerCase() === address.toLowerCase()
+                      ) {
+                        const tokenUri = await poolContract.methods
+                          .tokenURI(_tindex)
+                          .call();
+                        const response = await fetch(
+                          tokenUri.replace(
+                            'ipfs://',
+                            'https://gateway.pinata.cloud/ipfs/'
+                          )
+                        );
+                        let jsonifyResp = await response.json();
+                        jsonifyResp.tokenId = _tindex;
+                        ownedNftsInfo.push(jsonifyResp);
+                      }
+                    })
+                  );
+                } catch (error) {
+                  console.log(error);
+                }
+              }
+            }
+          }
+
+          let stakedNftsInfo = [];
+
+          if (stakedNftsIndex) {
+            try {
               await Promise.all(
-                totalAmountArray.map(async (_tid) => {
-                  const poolNftIndex = await poolContract.methods
-                    .tokenOfOwnerByIndex(address, _tid) // return the id of every nfts that is not staked yet
-                    .call();
-
-                  // TO DO: creating an object with staked and unstaked nfts from the collection
-
+                stakedNftsIndex.map(async (_tid) => {
                   const tokenUri = await poolContract.methods
-                    .tokenURI(poolNftIndex)
+                    .tokenURI(_tid)
                     .call();
                   const response = await fetch(
                     tokenUri.replace(
@@ -653,87 +756,13 @@ function Stronghold() {
                     )
                   );
                   let jsonifyResp = await response.json();
-                  jsonifyResp.tokenId = poolNftIndex;
-                  ownedNftsInfo.push(jsonifyResp);
+                  jsonifyResp.tokenId = _tid;
+                  stakedNftsInfo.push(jsonifyResp);
                 })
               );
-            } else if (_pid == 1 || _pid == 2) {
-              if (_pid == 1) {
-                let tokenIdsArray = [];
-                for (let index = 0; index < 64; index++) {
-                  tokenIdsArray.push(index);
-                }
-                await Promise.all(
-                  tokenIdsArray.map(async (_tindex) => {
-                    const ownerAddress = await poolContract.methods
-                      .ownerOf(_tindex)
-                      .call();
-                    if (ownerAddress.toLowerCase() === address.toLowerCase()) {
-                      const tokenUri = await poolContract.methods
-                        .tokenURI(_tindex)
-                        .call();
-                      const response = await fetch(
-                        tokenUri
-                        // .replace(
-                        //   'https://gateway.pinata.cloud/ipfs/',
-                        //   'https://cloudflare-ipfs.com/ipfs/'
-                        // )
-                      );
-                      let jsonifyResp = await response.json();
-                      jsonifyResp.tokenId = _tindex;
-                      ownedNftsInfo.push(jsonifyResp);
-                    }
-                  })
-                );
-              } else if (_pid == 2) {
-                let tokenIdsArray = [];
-                for (let index = 0; index < 96; index++) {
-                  tokenIdsArray.push(index);
-                }
-                await Promise.all(
-                  tokenIdsArray.map(async (_tindex) => {
-                    const ownerAddress = await poolContract.methods
-                      .ownerOf(_tindex)
-                      .call();
-                    if (ownerAddress.toLowerCase() === address.toLowerCase()) {
-                      const tokenUri = await poolContract.methods
-                        .tokenURI(_tindex)
-                        .call();
-                      const response = await fetch(
-                        tokenUri.replace(
-                          'ipfs://',
-                          'https://gateway.pinata.cloud/ipfs/'
-                        )
-                      );
-                      let jsonifyResp = await response.json();
-                      jsonifyResp.tokenId = _tindex;
-                      ownedNftsInfo.push(jsonifyResp);
-                    }
-                  })
-                );
-              }
+            } catch (error) {
+              console.log(error);
             }
-          }
-
-          let stakedNftsInfo = [];
-
-          if (stakedNftsIndex) {
-            await Promise.all(
-              stakedNftsIndex.map(async (_tid) => {
-                const tokenUri = await poolContract.methods
-                  .tokenURI(_tid)
-                  .call();
-                const response = await fetch(
-                  tokenUri.replace(
-                    'ipfs://',
-                    'https://cloudflare-ipfs.com/ipfs/'
-                  )
-                );
-                let jsonifyResp = await response.json();
-                jsonifyResp.tokenId = _tid;
-                stakedNftsInfo.push(jsonifyResp);
-              })
-            );
           }
 
           const XRLCresponse = await fetch('/config/abi_xrlc.json', {
@@ -1067,67 +1096,107 @@ function Stronghold() {
                         </s.Container>
                         <Row>
                           <Col>
-                        <s.Container
-                          ai={'center'}
-                          jc={'center'}
-                          style={{
-                            border: '1px solid var(--secondary)',
-                            borderRadius: '10px',
-                            padding: '30px',
-                            height: '100%',
-                            width: 'auto',
-                            marginBottom: '30px',
-                          }}
-                        >
-                          <s.TextDescription
-                            style={{
-                              textAlign: 'center',
-                              color: 'var(--accent-text)',
-                              fontSize: '1.2rem',
-                            }}
-                          >
-                            You own a total of {(ownedXRLC / 1e18).toFixed(3)}{' '}
-                            <a
-                              href="https://ftmscan.com/token/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
-                              target="_blank"
+                            <s.Container
+                              ai={'center'}
+                              jc={'center'}
+                              style={{
+                                border: '1px solid var(--secondary)',
+                                borderRadius: '10px',
+                                padding: '30px',
+                                height: '100%',
+                                width: 'auto',
+                                marginBottom: '30px',
+                              }}
                             >
-                              $XRLC
-                            </a>
-                            .
-                          </s.TextDescription>
-                        </s.Container>
+                              <s.TextDescription
+                                style={{
+                                  textAlign: 'center',
+                                  color: 'var(--accent-text)',
+                                  fontSize: '1.2rem',
+                                }}
+                              >
+                                You own a total of{' '}
+                                {(ownedXRLC / 1e18).toFixed(3)}{' '}
+                                <a
+                                  href="https://ftmscan.com/token/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
+                                  target="_blank"
+                                >
+                                  $XRLC
+                                </a>
+                                .
+                              </s.TextDescription>
+                            </s.Container>
                           </Col>
                           <Col>
-                        <s.Container ai={'center'}
-                          jc={'center'}
-                          style={{
-                            border: '1px solid var(--secondary)',
-                            borderRadius: '10px',
-                            padding: '30px',
-                            height: '100%',
-                            width: 'auto',
-                            marginBottom: '30px',
-                          }}>
-                          <s.TextDescription
-                            style={{
-                              textAlign: 'center',
-                              color: 'var(--accent-text)',
-                              fontSize: '1.2rem',
-                            }}
-                          >
-                            You can exchange $XRLC on{' '}
-                            <a
-                              href="https://spookyswap.finance/swap?outputCurrency=0xe5586582e1a60e302a53e73e4fadccaf868b459a"
-                              target="_blank"
+                            <s.Container
+                              ai={'center'}
+                              jc={'center'}
+                              style={{
+                                border: '1px solid var(--secondary)',
+                                borderRadius: '10px',
+                                padding: '30px',
+                                height: '100%',
+                                width: 'auto',
+                                marginBottom: '30px',
+                              }}
                             >
-                              SpookySwap
-                            </a>
-                            .
-                          </s.TextDescription>
-                        </s.Container>
+                              <s.TextDescription
+                                style={{
+                                  textAlign: 'center',
+                                  color: 'var(--accent-text)',
+                                  fontSize: '1.2rem',
+                                }}
+                              >
+                                You can exchange $XRLC on: <br />
+                                <a
+                                  href="https://spooky.fi/#/swap?outputCurrency=0xe5586582e1a60e302a53e73e4fadccaf868b459a"
+                                  target="_blank"
+                                >
+                                  SpookySwap
+                                </a>
+                                <br />
+                                <a
+                                  href="https://beets.fi/#/trade/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
+                                  target="_blank"
+                                >
+                                  Beethovenx
+                                </a>
+                              </s.TextDescription>
+                            </s.Container>
+                          </Col>
+                          <Col>
+                            <s.Container
+                              ai={'center'}
+                              jc={'center'}
+                              style={{
+                                border: '1px solid var(--secondary)',
+                                borderRadius: '10px',
+                                padding: '30px',
+                                height: '100%',
+                                width: 'auto',
+                                marginBottom: '30px',
+                              }}
+                            >
+                              <s.TextDescription
+                                style={{
+                                  textAlign: 'center',
+                                  color: 'var(--accent-text)',
+                                  fontSize: '1.2rem',
+                                }}
+                              >
+                                You can invest in our deflationary pool on
+                                Beethovenx:{' '}
+                                <a
+                                  href="https://beets.fi/#/pool/0x99eb438a19bf25cecece633661f855adabe20a3d000100000000000000000460"
+                                  target="_blank"
+                                >
+                                  A Symphony Of Explosive Relics
+                                </a>
+                              </s.TextDescription>
+                            </s.Container>
                           </Col>
                         </Row>
-                        <s.SpacerLarge/>
+                        <s.SpacerLarge />
                         <Nav
                           key="nav-pills-main-1"
                           variant="pills"
@@ -1186,8 +1255,13 @@ function Stronghold() {
                               pool,
                               idx // TODO: da cambiare con l'array vero e proprio del poolLength
                             ) => (
-                              <Col lg={true} key={`maincol-${pool.poolId}`} style={{
-                                marginBottom: '20px'}}>
+                              <Col
+                                lg={true}
+                                key={`maincol-${pool.poolId}`}
+                                style={{
+                                  marginBottom: '20px',
+                                }}
+                              >
                                 <Card
                                   key={`card-${pool.poolId}`}
                                   className="text-center zoom"
@@ -1203,17 +1277,22 @@ function Stronghold() {
                                       isDisplaySection === 'pool'
                                         ? 'block'
                                         : 'none',
-                                  }} 
+                                  }}
                                 >
                                   {pool.poolId == 0 && (
                                     <Card.Img
                                       key={`cardimg-${pool.poolId}`}
                                       variant="top"
-                                      style={{ height: '18rem', imageRendering: 'pixelated' }}
+                                      style={{
+                                        height: '18rem',
+                                        imageRendering: 'pixelated',
+                                      }}
                                       src={`/config/images/lord.gif`}
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        updateDisplaySection(pool.poolId.toString());
+                                        updateDisplaySection(
+                                          pool.poolId.toString()
+                                        );
                                       }}
                                     />
                                   )}
@@ -1221,11 +1300,16 @@ function Stronghold() {
                                     <Card.Img
                                       key={`cardimg-${pool.poolId}`}
                                       variant="top"
-                                      style={{ height: '18rem', imageRendering: 'pixelated' }}
+                                      style={{
+                                        height: '18rem',
+                                        imageRendering: 'pixelated',
+                                      }}
                                       src={`/config/images/specter.gif`}
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        updateDisplaySection(pool.poolId.toString());
+                                        updateDisplaySection(
+                                          pool.poolId.toString()
+                                        );
                                       }}
                                     />
                                   )}
@@ -1237,7 +1321,9 @@ function Stronghold() {
                                       src={`/config/images/creeptoghoul.png`}
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        updateDisplaySection(pool.poolId.toString());
+                                        updateDisplaySection(
+                                          pool.poolId.toString()
+                                        );
                                       }}
                                     />
                                   )}
@@ -1249,7 +1335,9 @@ function Stronghold() {
                                       src={pool.poolImage}
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        updateDisplaySection(pool.poolId.toString());
+                                        updateDisplaySection(
+                                          pool.poolId.toString()
+                                        );
                                       }}
                                     />
                                   )}
@@ -1263,7 +1351,9 @@ function Stronghold() {
                                       className="text-start"
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        updateDisplaySection(pool.poolId.toString());
+                                        updateDisplaySection(
+                                          pool.poolId.toString()
+                                        );
                                       }}
                                     >
                                       {pool.poolName.toString() ===
@@ -1271,11 +1361,15 @@ function Stronghold() {
                                         ? 'Fantom Specters'
                                         : pool.poolName}
                                     </Card.Title>
-                                    <Row xs="auto" key={`row-1-${pool.poolId}`}
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      updateDisplaySection(pool.poolId.toString());
-                                    }}
+                                    <Row
+                                      xs="auto"
+                                      key={`row-1-${pool.poolId}`}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        updateDisplaySection(
+                                          pool.poolId.toString()
+                                        );
+                                      }}
                                     >
                                       <Col key={`smcol-1-${pool.poolId}`}>
                                         <Card.Text
@@ -1301,7 +1395,9 @@ function Stronghold() {
                                       }}
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        updateDisplaySection(pool.poolId.toString());
+                                        updateDisplaySection(
+                                          pool.poolId.toString()
+                                        );
                                       }}
                                     >
                                       <Row
@@ -1369,7 +1465,7 @@ function Stronghold() {
                                               style={{
                                                 fontSize: '1.2rem',
                                                 fontWeight: 'normal',
-                                                width: 'auto'
+                                                width: 'auto',
                                               }}
                                               variant="primary"
                                               onClick={(e) => {
@@ -1467,8 +1563,9 @@ function Stronghold() {
                             )
                           )}
                         </Row>
-                        
-                        <s.Container ai={'center'}
+
+                        <s.Container
+                          ai={'center'}
                           jc={'center'}
                           style={{
                             // border: '1px solid var(--secondary)',
@@ -1477,278 +1574,294 @@ function Stronghold() {
                             height: '100%',
                             width: '80%',
                             marginBottom: '30px',
-                            justifyContent: 'center'
-                          }}>
-
-                        <Row 
-                        xs={1}
-                        md={'auto'}
-                        lg={'auto'}
-                        className="g-4"
-                        style={{
-                          // border: '1px solid var(--secondary)',
-                          // borderRadius: '10px',
-                          // padding: '30px',
-                          // height: '100%',
-                          // width: '1200px',
-                          // marginBottom: '30px',
-                          justifyContent: 'center'
-                        }}
+                            justifyContent: 'center',
+                          }}
                         >
-                          {poolsInfo.map((pool, idx) =>
-                            pool.stakedNfts.info.map((id) => (
-                              <Col
-                                lg={true}
-                                key={`col-1-${pool.poolId}-${id.tokenId}`}
-                                style={{
-                                  marginBottom: '20px',
-                                  display:
-                                    isDisplaySection === pool.poolId.toString()
-                                      ? 'block'
-                                      : 'none',
-                                }}
-                              >
-                                <Card
-                                  key={`card-1-${pool.poolId}-${id.tokenId}`}
-                                  className="text-center zoom"
-                                  id={idx.toString()}
+                          <Row
+                            xs={1}
+                            md={'auto'}
+                            lg={'auto'}
+                            className="g-4"
+                            style={{
+                              // border: '1px solid var(--secondary)',
+                              // borderRadius: '10px',
+                              // padding: '30px',
+                              // height: '100%',
+                              // width: '1200px',
+                              // marginBottom: '30px',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            {poolsInfo.map((pool, idx) =>
+                              pool.stakedNfts.info.map((id) => (
+                                <Col
+                                  lg={true}
+                                  key={`col-1-${pool.poolId}-${id.tokenId}`}
                                   style={{
-                                    maxWidth: '300px',
-                                    height: '100%',
-                                    borderRadius: '10px',
-                                    backgroundColor: 'var(--primary-dark)',
-                                    color: '#fff',
+                                    marginBottom: '20px',
+                                    display:
+                                      isDisplaySection ===
+                                      pool.poolId.toString()
+                                        ? 'block'
+                                        : 'none',
                                   }}
                                 >
-                                  {pool.poolId == 0 &&
-                                    (id.tokenId == 1 ||
-                                    id.tokenId == 2 ||
-                                    id.tokenId == 3 ? (
-                                      <Card.Img
-                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                        variant="top"
-                                        src={`/config/images/lords/${id.tokenId}.gif`}
-                                        style={{ imageRendering: 'pixelated' }}
-                                      />
-                                    ) : (
-                                      <Card.Img
-                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                        variant="top"
-                                        src={`/config/images/lords/${id.tokenId}.png`}
-                                        style={{ imageRendering: 'pixelated' }}
-                                      />
-                                    ))}
-                                    {pool.poolId == 1 &&
-                                    (id.tokenId == 1 ||
-                                    id.tokenId == 2 ||
-                                    id.tokenId == 4 ||
-                                    id.tokenId == 5 ? (
-                                      <Card.Img
-                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                        variant="top"
-                                        src={`https://media-nft.paintswap.finance/250_0xf92d06ff67a955ccfd2cc2515ba6bc125eae4336_${id.tokenId}.gif`}
-                                        style={{ imageRendering: 'pixelated' }}
-                                      />
-                                    ) : (
-                                      <Card.Img
-                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                        variant="top"
-                                        src={`https://media-nft.paintswap.finance/250_0xf92d06ff67a955ccfd2cc2515ba6bc125eae4336_${id.tokenId}.png`}
-                                        style={{ imageRendering: 'pixelated' }}
-                                      />
-                                    ))}
-                                  {pool.poolId == 2 && (
-                                    <Card.Img
-                                      key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                      variant="top"
-                                      src={`https://media-nft.paintswap.finance/250_0xd01f0b6f3a5bd70082e4cb058808edf23f1e408a_${id.tokenId}.png`}
-                                    />
-                                  )}
-                                  {pool.poolId > 2 && (
-                                    <Card.Img
-                                      key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                      variant="top"
-                                      src={
-                                        parseInt(pool.poolId) == 1 ||
-                                        parseInt(pool.poolId) == 2
-                                          ? id.image
-                                          // .replace(
-                                          //     'https://gateway.pinata.cloud/ipfs/',
-                                          //     'https://cloudflare-ipfs.com/ipfs/'
-                                          //   )
-                                          : id.image.replace(
-                                              'ipfs://',
-                                              'https://cloudflare-ipfs.com/ipfs/'
-                                            )
-                                      }
-                                    />
-                                  )}
-                                  <Card.Body
-                                    key={`cardbody-1-${pool.poolId}-${id.tokenId}`}
+                                  <Card
+                                    key={`card-1-${pool.poolId}-${id.tokenId}`}
+                                    className="text-center zoom"
+                                    id={idx.toString()}
+                                    style={{
+                                      maxWidth: '300px',
+                                      height: '100%',
+                                      borderRadius: '10px',
+                                      backgroundColor: 'var(--primary-dark)',
+                                      color: '#fff',
+                                    }}
                                   >
-                                    <Card.Title
-                                      key={`cardtitle-1-${pool.poolId}-${id.tokenId}`}
-                                      style={{
-                                        borderBottom: '1px solid #fff',
-                                        paddingBottom: '5px',
-                                      }}
-                                      className="text-start"
+                                    {pool.poolId == 0 &&
+                                      (id.tokenId == 1 ||
+                                      id.tokenId == 2 ||
+                                      id.tokenId == 3 ? (
+                                        <Card.Img
+                                          key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                          variant="top"
+                                          src={`/config/images/lords/${id.tokenId}.gif`}
+                                          style={{
+                                            imageRendering: 'pixelated',
+                                          }}
+                                        />
+                                      ) : (
+                                        <Card.Img
+                                          key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                          variant="top"
+                                          src={`/config/images/lords/${id.tokenId}.png`}
+                                          style={{
+                                            imageRendering: 'pixelated',
+                                          }}
+                                        />
+                                      ))}
+                                    {pool.poolId == 1 &&
+                                      (id.tokenId == 1 ||
+                                      id.tokenId == 2 ||
+                                      id.tokenId == 4 ||
+                                      id.tokenId == 5 ? (
+                                        <Card.Img
+                                          key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                          variant="top"
+                                          src={`https://media-nft.paintswap.finance/250_0xf92d06ff67a955ccfd2cc2515ba6bc125eae4336_${id.tokenId}.webp`}
+                                          style={{
+                                            imageRendering: 'pixelated',
+                                          }}
+                                        />
+                                      ) : (
+                                        <Card.Img
+                                          key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                          variant="top"
+                                          src={`https://media-nft.paintswap.finance/250_0xf92d06ff67a955ccfd2cc2515ba6bc125eae4336_${id.tokenId}.gif`}
+                                          style={{
+                                            imageRendering: 'pixelated',
+                                          }}
+                                        />
+                                      ))}
+                                    {pool.poolId == 2 && (
+                                      <Card.Img
+                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                        variant="top"
+                                        src={`https://media-nft.paintswap.finance/250_0xd01f0b6f3a5bd70082e4cb058808edf23f1e408a_${id.tokenId}.png`}
+                                      />
+                                    )}
+                                    {pool.poolId > 2 && (
+                                      <Card.Img
+                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                        variant="top"
+                                        src={
+                                          parseInt(pool.poolId) == 1 ||
+                                          parseInt(pool.poolId) == 2
+                                            ? id.image
+                                            : // .replace(
+                                              //     'https://gateway.pinata.cloud/ipfs/',
+                                              //     'https://cloudflare-ipfs.com/ipfs/'
+                                              //   )
+                                              id.image.replace(
+                                                'ipfs://',
+                                                'https://cloudflare-ipfs.com/ipfs/'
+                                              )
+                                        }
+                                      />
+                                    )}
+                                    <Card.Body
+                                      key={`cardbody-1-${pool.poolId}-${id.tokenId}`}
                                     >
-                                      {id.name}
-                                    </Card.Title>
+                                      <Card.Title
+                                        key={`cardtitle-1-${pool.poolId}-${id.tokenId}`}
+                                        style={{
+                                          borderBottom: '1px solid #fff',
+                                          paddingBottom: '5px',
+                                        }}
+                                        className="text-start"
+                                      >
+                                        {id.name}
+                                      </Card.Title>
 
-                                    <s.SpacerSmall />
-                                    <StyledButton
-                                      key={`btn-1-${pool.poolId}-${id.tokenId}`}
-                                      style={{
-                                        fontSize: '1.2rem',
-                                        fontWeight: 'normal',
-                                        width: 'auto',
-                                      }}
-                                      variant="primary"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        testWithdraw(pool.poolId, [
-                                          parseInt(id.tokenId),
-                                        ]);
-                                      }}
-                                    >
-                                      Unstake
-                                    </StyledButton>
-                                  </Card.Body>
-                                </Card>
-                              </Col>
-                            ))
-                          )}
-                          {poolsInfo.map((pool, idx) =>
-                            pool.ownedNfts.info.map((id) => (
-                              <Col
-                                lg={true}
-                                key={`col-1-${pool.poolId}-${id.tokenId}`}
-                                style={{
-                                  marginBottom: '20px',
-                                  display:
-                                    isDisplaySection === pool.poolId.toString()
-                                      ? 'block'
-                                      : 'none',
-                                }}
-                              >
-                                <Card
-                                  key={`card-1-${pool.poolId}-${id.tokenId}`}
-                                  className="text-center zoom"
-                                  id={idx.toString()}
+                                      <s.SpacerSmall />
+                                      <StyledButton
+                                        key={`btn-1-${pool.poolId}-${id.tokenId}`}
+                                        style={{
+                                          fontSize: '1.2rem',
+                                          fontWeight: 'normal',
+                                          width: 'auto',
+                                        }}
+                                        variant="primary"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          testWithdraw(pool.poolId, [
+                                            parseInt(id.tokenId),
+                                          ]);
+                                        }}
+                                      >
+                                        Unstake
+                                      </StyledButton>
+                                    </Card.Body>
+                                  </Card>
+                                </Col>
+                              ))
+                            )}
+                            {poolsInfo.map((pool, idx) =>
+                              pool.ownedNfts.info.map((id) => (
+                                <Col
+                                  lg={true}
+                                  key={`col-1-${pool.poolId}-${id.tokenId}`}
                                   style={{
-                                    maxWidth: '300px',
-                                    height: '100%',
-                                    borderRadius: '10px',
-                                    backgroundColor: 'var(--primary-dark)',
-                                    color: '#fff',
+                                    marginBottom: '20px',
+                                    display:
+                                      isDisplaySection ===
+                                      pool.poolId.toString()
+                                        ? 'block'
+                                        : 'none',
                                   }}
                                 >
-                                  {pool.poolId == 0 &&
-                                    (id.tokenId == 1 ||
-                                    id.tokenId == 2 ||
-                                    id.tokenId == 3 ? (
-                                      <Card.Img
-                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                        variant="top"
-                                        src={`/config/images/lords/${id.tokenId}.gif`}
-                                        style={{ imageRendering: 'pixelated' }}
-                                      />
-                                    ) : (
-                                      <Card.Img
-                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                        variant="top"
-                                        src={`/config/images/lords/${id.tokenId}.png`}
-                                        style={{ imageRendering: 'pixelated' }}
-                                      />
-                                    ))}
-                                    {pool.poolId == 1 &&
-                                    (id.tokenId == 1 ||
-                                    id.tokenId == 2 ||
-                                    id.tokenId == 4 ||
-                                    id.tokenId == 5 ? (
-                                      <Card.Img
-                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                        variant="top"
-                                        src={`https://media-nft.paintswap.finance/250_0xf92d06ff67a955ccfd2cc2515ba6bc125eae4336_${id.tokenId}.jpg`}
-                                        style={{ imageRendering: 'pixelated' }}
-                                      />
-                                    ) : (
-                                      <Card.Img
-                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                        variant="top"
-                                        src={`https://media-nft.paintswap.finance/250_0xf92d06ff67a955ccfd2cc2515ba6bc125eae4336_${id.tokenId}.gif`}
-                                        style={{ imageRendering: 'pixelated' }}
-                                      />
-                                    ))}
-                                  {pool.poolId == 2 && (
-                                    <Card.Img
-                                      key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                      variant="top"
-                                      src={`https://media-nft.paintswap.finance/250_0xd01f0b6f3a5bd70082e4cb058808edf23f1e408a_${id.tokenId}.png`}
-                                    />
-                                  )}
-                                  {pool.poolId > 2 && (
-                                    <Card.Img
-                                      key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
-                                      variant="top"
-                                      src={
-                                        parseInt(pool.poolId) == 1 ||
-                                        parseInt(pool.poolId) == 2
-                                          ? id.image
-                                          // .replace(
-                                          //     'https://gateway.pinata.cloud/ipfs/',
-                                          //     'https://cloudflare-ipfs.com/ipfs/'
-                                          //   )
-                                          : id.image.replace(
-                                              'ipfs://',
-                                              'https://cloudflare-ipfs.com/ipfs/'
-                                            )
-                                      }
-                                    />
-                                  )}
-                                  <Card.Body
-                                    key={`cardbody-1-${pool.poolId}-${id.tokenId}`}
+                                  <Card
+                                    key={`card-1-${pool.poolId}-${id.tokenId}`}
+                                    className="text-center zoom"
+                                    id={idx.toString()}
+                                    style={{
+                                      maxWidth: '300px',
+                                      height: '100%',
+                                      borderRadius: '10px',
+                                      backgroundColor: 'var(--primary-dark)',
+                                      color: '#fff',
+                                    }}
                                   >
-                                    <Card.Title
-                                      key={`cardtitle-1-${pool.poolId}-${id.tokenId}`}
-                                      style={{
-                                        borderBottom: '1px solid #fff',
-                                        paddingBottom: '5px',
-                                      }}
-                                      className="text-start"
+                                    {pool.poolId == 0 &&
+                                      (id.tokenId == 1 ||
+                                      id.tokenId == 2 ||
+                                      id.tokenId == 3 ? (
+                                        <Card.Img
+                                          key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                          variant="top"
+                                          src={`/config/images/lords/${id.tokenId}.gif`}
+                                          style={{
+                                            imageRendering: 'pixelated',
+                                          }}
+                                        />
+                                      ) : (
+                                        <Card.Img
+                                          key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                          variant="top"
+                                          src={`/config/images/lords/${id.tokenId}.png`}
+                                          style={{
+                                            imageRendering: 'pixelated',
+                                          }}
+                                        />
+                                      ))}
+                                    {pool.poolId == 1 &&
+                                      (id.tokenId == 1 ||
+                                      id.tokenId == 2 ||
+                                      id.tokenId == 4 ||
+                                      id.tokenId == 5 ? (
+                                        <Card.Img
+                                          key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                          variant="top"
+                                          src={`https://media-nft.paintswap.finance/250_0xf92d06ff67a955ccfd2cc2515ba6bc125eae4336_${id.tokenId}.jpg`}
+                                          style={{
+                                            imageRendering: 'pixelated',
+                                          }}
+                                        />
+                                      ) : (
+                                        <Card.Img
+                                          key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                          variant="top"
+                                          src={`https://media-nft.paintswap.finance/250_0xf92d06ff67a955ccfd2cc2515ba6bc125eae4336_${id.tokenId}.gif`}
+                                          style={{
+                                            imageRendering: 'pixelated',
+                                          }}
+                                        />
+                                      ))}
+                                    {pool.poolId == 2 && (
+                                      <Card.Img
+                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                        variant="top"
+                                        src={`https://media-nft.paintswap.finance/250_0xd01f0b6f3a5bd70082e4cb058808edf23f1e408a_${id.tokenId}.png`}
+                                      />
+                                    )}
+                                    {pool.poolId > 2 && (
+                                      <Card.Img
+                                        key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
+                                        variant="top"
+                                        src={
+                                          parseInt(pool.poolId) == 1 ||
+                                          parseInt(pool.poolId) == 2
+                                            ? id.image
+                                            : // .replace(
+                                              //     'https://gateway.pinata.cloud/ipfs/',
+                                              //     'https://cloudflare-ipfs.com/ipfs/'
+                                              //   )
+                                              id.image.replace(
+                                                'ipfs://',
+                                                'https://cloudflare-ipfs.com/ipfs/'
+                                              )
+                                        }
+                                      />
+                                    )}
+                                    <Card.Body
+                                      key={`cardbody-1-${pool.poolId}-${id.tokenId}`}
                                     >
-                                      {id.name}
-                                    </Card.Title>
+                                      <Card.Title
+                                        key={`cardtitle-1-${pool.poolId}-${id.tokenId}`}
+                                        style={{
+                                          borderBottom: '1px solid #fff',
+                                          paddingBottom: '5px',
+                                        }}
+                                        className="text-start"
+                                      >
+                                        {id.name}
+                                      </Card.Title>
 
-                                    <s.SpacerSmall />
-                                    <StyledButton
-                                      key={`btn-1-${pool.poolId}-${id.tokenId}`}
-                                      style={{
-                                        fontSize: '1.2rem',
-                                        fontWeight: 'normal',
-                                        width: 'auto',
-                                      }}
-                                      variant="primary"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        testDeposit(pool.poolId, [
-                                          parseInt(id.tokenId),
-                                        ]);
-                                      }}
-                                    >
-                                      Stake
-                                    </StyledButton>
-                                  </Card.Body>
-                                </Card>
-                              </Col>
-                            ))
-                          )}
-                        </Row>
-
-                          </s.Container>
-
+                                      <s.SpacerSmall />
+                                      <StyledButton
+                                        key={`btn-1-${pool.poolId}-${id.tokenId}`}
+                                        style={{
+                                          fontSize: '1.2rem',
+                                          fontWeight: 'normal',
+                                          width: 'auto',
+                                        }}
+                                        variant="primary"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          testDeposit(pool.poolId, [
+                                            parseInt(id.tokenId),
+                                          ]);
+                                        }}
+                                      >
+                                        Stake
+                                      </StyledButton>
+                                    </Card.Body>
+                                  </Card>
+                                </Col>
+                              ))
+                            )}
+                          </Row>
+                        </s.Container>
                       </>
                     )}
                   </>

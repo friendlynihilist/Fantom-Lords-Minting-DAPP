@@ -19,3 +19,19 @@
     flex: '0 0 31%'
   }
 } */
+
+a {
+  color: var(--secondary);
+}
+
+a:hover {
+  color: #3c1c87;
+}
+
+.pyre-modal {
+  color: rgb(255, 255, 255);
+  background-color: var(--primary);
+  padding: 20px;
+  flex: '0 0 1'
+  /* font-size: 200px; */
+}

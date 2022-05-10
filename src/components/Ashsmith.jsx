@@ -240,9 +240,12 @@ function Ashsmith() {
           }}
         >
           {/* <Alert.Heading>{feedback}</Alert.Heading> */}
-          <p>{feedback}</p>
+          <s.Container>
+            <s.TextDescription>{feedback}</s.TextDescription>
+          </s.Container>
+          {/* <p>{feedback}</p> */}
           <hr />
-          <div className="d-flex justify-content-end">
+          <s.Container className="d-flex justify-content-end">
             <StyledButton
               key="alert-btn-1"
               style={{
@@ -254,7 +257,7 @@ function Ashsmith() {
             >
               Close
             </StyledButton>
-          </div>
+          </s.Container>
         </Alert>
 
         {/* {!show && <Button onClick={() => setShow(true)}>Show Alert</Button>} */}
@@ -286,7 +289,7 @@ function Ashsmith() {
       .call();
 
     setOwnedXRLC(balanceOfXRLC);
-  }
+  };
 
   const updatePrice = async (amount) => {
     const abiResponse = await fetch('/config/abi_artifacts.json', {
@@ -331,12 +334,10 @@ function Ashsmith() {
 
     const web3 = new Web3(window.ethereum);
     await window.ethereum.enable();
-    const XRLCContract = new web3.eth.Contract(
-      XRLCAbi,
-      XRLCAddress
-    );
+    const XRLCContract = new web3.eth.Contract(XRLCAbi, XRLCAddress);
 
-    const artifactsAddress = '0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11'.toLowerCase();
+    const artifactsAddress =
+      '0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11'.toLowerCase();
 
     const approval = await XRLCContract.methods
       .allowance(blockchain.account.toLowerCase(), artifactsAddress)
@@ -345,12 +346,12 @@ function Ashsmith() {
     console.log(approval);
 
     let confirmApprove = true;
-      if (approval == 0) {
-        confirmApprove = false;
-      }
+    if (approval == 0) {
+      confirmApprove = false;
+    }
 
-      setApproval(confirmApprove);
-  }
+    setApproval(confirmApprove);
+  };
 
   const testSetApprovalForAll = async () => {
     setFeedback(`You're approving XRLC...`);
@@ -368,22 +369,19 @@ function Ashsmith() {
 
     const web3 = new Web3(window.ethereum);
     await window.ethereum.enable();
-    const XRLCContract = new web3.eth.Contract(
-      XRLCAbi,
-      XRLCAddress
-    );
+    const XRLCContract = new web3.eth.Contract(XRLCAbi, XRLCAddress);
 
-    const artifactsAddress = '0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11'.toLowerCase();
-
+    const artifactsAddress =
+      '0xC021315E4aF3C6cbD2C96E5F7C67d0A4c2F8FE11'.toLowerCase();
 
     await XRLCContract.methods
-      .approve(artifactsAddress, web3.utils.toWei('1000000','ether'))
+      .approve(artifactsAddress, web3.utils.toWei('1000000', 'ether'))
       .send({
         // to: CONFIG.CONTRACT_ADDRESS,
         from: blockchain.account.toLowerCase(),
         maxPriorityFeePerGas: null,
         maxFeePerGas: null,
-        type: '0x2'
+        type: '0x2',
       });
     setApproval(true);
     // testPoolInfo();
@@ -425,11 +423,11 @@ function Ashsmith() {
     artifactContract.methods
       .collectArtifacts(mintAmount)
       .send({
-          to: CONFIG.CONTRACT_ADDRESS,
-          from: blockchain.account.toLowerCase(),
-          maxPriorityFeePerGas: null,
-          maxFeePerGas: null,
-          type: '0x2'
+        to: CONFIG.CONTRACT_ADDRESS,
+        from: blockchain.account.toLowerCase(),
+        maxPriorityFeePerGas: null,
+        maxFeePerGas: null,
+        type: '0x2',
         // gasLimit: String(totalGasLimit),
         // to: CONFIG.CONTRACT_ADDRESS,
         // from: blockchain.account,
@@ -443,7 +441,9 @@ function Ashsmith() {
       .then((receipt) => {
         console.log(receipt);
         setFeedback(
-          `Your Artifact${mintAmount > 1 ? 's are' : 'is'} finally redeemed from the ashes!`
+          `Your Artifact${
+            mintAmount > 1 ? 's are' : 'is'
+          } finally redeemed from the ashes!`
         );
         setClaimingNft(false);
         dispatch(fetchData(blockchain.account));
@@ -517,22 +517,25 @@ function Ashsmith() {
         idsArray.push(index);
       }
 
-      await Promise.all(
-        idsArray.map(async (id) => {
-          const getTokenId = await artifactsContract.methods
-            .tokenOfOwnerByIndex(address.toLowerCase(), id)
-            .call();
-          const tokenUri = await artifactsContract.methods
-            .tokenURI(getTokenId)
-            .call();
-          const response = await fetch(
-            tokenUri.replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
-          );
-          const jsonifyResp = await response.json();
-          // tokensArray.push(jsonifyResp);
-          tokensArray.push(jsonifyResp);
-        })
-      );
+      try {
+        await Promise.all(
+          idsArray.map(async (id) => {
+            const getTokenId = await artifactsContract.methods
+              .tokenOfOwnerByIndex(address.toLowerCase(), id)
+              .call();
+            const tokenUri = await artifactsContract.methods
+              .tokenURI(getTokenId)
+              .call();
+            const response = await fetch(tokenUri);
+            const jsonifyResp = await response.json();
+            // tokensArray.push(jsonifyResp);
+            tokensArray.push(jsonifyResp);
+          })
+        );
+      } catch (error) {
+        console.log(error);
+      }
+
       // SETSTATE SPINNER FALSE
 
       // SIMPLE SORT - ADD MORE SORTING OPTION IN THE FUTURE
@@ -568,7 +571,7 @@ function Ashsmith() {
       >
         {/* <HeaderTitle>your Army</HeaderTitle> */}
         {/* <s.SpacerSmall /> */}
-        <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
+        <ResponsiveWrapper flex={1} style={{ padding: 24 }}>
           <s.SpacerLarge />
           <s.Container flex={1} jc={'center'} ai={'center'}>
             <StyledImg
@@ -618,7 +621,9 @@ function Ashsmith() {
 
             {blockchain.account === '' || blockchain.smartContract === null ? (
               <>
-                <s.TextDescription
+                <s.Container
+                  ai={'center'}
+                  jc={'center'}
                   style={{
                     textAlign: 'center',
                     color: 'var(--accent-text)',
@@ -641,7 +646,7 @@ function Ashsmith() {
                     typeSpeed={45}
                     // scrollArea={myAppRef}
                   />
-                </s.TextDescription>
+                </s.Container>
               </>
             ) : null}
 
@@ -679,7 +684,9 @@ function Ashsmith() {
               <>
                 {!isUpdatingData ? (
                   <>
-                    <s.TextDescription
+                    <s.Container
+                      ai={'center'}
+                      jc={'center'}
                       style={{
                         textAlign: 'center',
                         color: 'var(--accent-text)',
@@ -699,7 +706,7 @@ function Ashsmith() {
                         typeSpeed={45}
                         // scrollArea={myAppRef}
                       />
-                    </s.TextDescription>
+                    </s.Container>
                     <s.Container ai={'center'} jc={'center'}>
                       <s.SpacerSmall />
                       <StyledButton
@@ -719,7 +726,9 @@ function Ashsmith() {
                   <>
                     {claimingNft && <AlertDismissible />}
                     {isDoingTransaction && <AlertDismissible />}
-                    <s.TextDescription
+                    <s.Container
+                      ai={'center'}
+                      jc={'center'}
                       style={{
                         textAlign: 'center',
                         color: 'var(--accent-text)',
@@ -736,8 +745,8 @@ function Ashsmith() {
                         typeSpeed={45}
                         // scrollArea={myAppRef}
                       />
-                    </s.TextDescription>
-                    
+                    </s.Container>
+
                     <s.SpacerMedium />
                     <s.Container
                       ai={'center'}
@@ -748,158 +757,197 @@ function Ashsmith() {
                       }}
                     >
                       {!approvalInfo ? (
-                      <>
-                      <s.Container ai={'center'} jc={'center'} fd={'row'}>
-                        <StyledButton
-                          style={{ fontSize: '1.6rem' }}
-                          // disabled={claimingNft ? 1 : 0}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            testSetApprovalForAll();
-                            getData();
-                          }}
-                        >
-                          {'APPROVE'}
-                        </StyledButton>
-                      </s.Container>
-                      </>
-                    ) : (
-                      <>
-                      <s.TextDescription
-                        style={{
-                          textAlign: 'center',
-                          color: 'var(--accent-text)',
-                        }}
-                      >
-                        {feedback}
-                      </s.TextDescription>
-                      <Row>
-                          <Col>
-                        <s.Container
-                          ai={'center'}
-                          jc={'center'}
-                          style={{
-                            border: '1px solid var(--secondary)',
-                            borderRadius: '10px',
-                            padding: '30px',
-                            width: 'auto',
-                            height: '100%',
-                            marginBottom: '30px',
-                          }}
-                        >
-                          <s.TextDescription
+                        <>
+                          <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                            <StyledButton
+                              style={{ fontSize: '1.6rem' }}
+                              // disabled={claimingNft ? 1 : 0}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                testSetApprovalForAll();
+                                getData();
+                              }}
+                            >
+                              {'APPROVE'}
+                            </StyledButton>
+                          </s.Container>
+                        </>
+                      ) : (
+                        <>
+                          {/* <s.TextDescription
                             style={{
                               textAlign: 'center',
                               color: 'var(--accent-text)',
-                              fontSize: '1.2rem',
                             }}
                           >
-                            You own a total of {(ownedXRLC / 1e18).toFixed(3)}{' '}
-                            <a
-                              href="https://ftmscan.com/token/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
-                              target="_blank"
-                            >
-                              $XRLC
-                            </a>
-                            .
-                          </s.TextDescription>
-                        </s.Container>
-                          </Col>
-                          <Col>
-                        <s.Container ai={'center'}
-                          jc={'center'}
-                          style={{
-                            border: '1px solid var(--secondary)',
-                            borderRadius: '10px',
-                            padding: '30px',
-                            height: '100%',
-                            width: 'auto',
-                            marginBottom: '30px',
-                          }}>
-                          <s.TextDescription
-                            style={{
-                              textAlign: 'center',
-                              color: 'var(--accent-text)',
-                              fontSize: '1.2rem',
-                            }}
-                          >
-                            You can exchange $XRLC on{' '}
-                            <a
-                              href="https://spookyswap.finance/swap?outputCurrency=0xe5586582e1a60e302a53e73e4fadccaf868b459a"
-                              target="_blank"
-                            >
-                              SpookySwap
-                            </a>
-                            .
-                          </s.TextDescription>
-                        </s.Container>
-                          </Col>
-                        </Row>
-                      
-                      <s.SpacerLarge />
+                            {feedback}
+                          </s.TextDescription> */}
+                          <Row>
+                            <Col>
+                              <s.Container
+                                ai={'center'}
+                                jc={'center'}
+                                style={{
+                                  border: '1px solid var(--secondary)',
+                                  borderRadius: '10px',
+                                  padding: '30px',
+                                  height: '100%',
+                                  width: 'auto',
+                                  marginBottom: '30px',
+                                }}
+                              >
+                                <s.TextDescription
+                                  style={{
+                                    textAlign: 'center',
+                                    color: 'var(--accent-text)',
+                                    fontSize: '1.2rem',
+                                  }}
+                                >
+                                  You own a total of{' '}
+                                  {(ownedXRLC / 1e18).toFixed(3)}{' '}
+                                  <a
+                                    href="https://ftmscan.com/token/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
+                                    target="_blank"
+                                  >
+                                    $XRLC
+                                  </a>
+                                  .
+                                </s.TextDescription>
+                              </s.Container>
+                            </Col>
+                            <Col>
+                              <s.Container
+                                ai={'center'}
+                                jc={'center'}
+                                style={{
+                                  border: '1px solid var(--secondary)',
+                                  borderRadius: '10px',
+                                  padding: '30px',
+                                  height: '100%',
+                                  width: 'auto',
+                                  marginBottom: '30px',
+                                }}
+                              >
+                                <s.TextDescription
+                                  style={{
+                                    textAlign: 'center',
+                                    color: 'var(--accent-text)',
+                                    fontSize: '1.2rem',
+                                  }}
+                                >
+                                  You can exchange $XRLC on: <br />
+                                  <a
+                                    href="https://spooky.fi/#/swap?outputCurrency=0xe5586582e1a60e302a53e73e4fadccaf868b459a"
+                                    target="_blank"
+                                  >
+                                    SpookySwap
+                                  </a>
+                                  <br />
+                                  <a
+                                    href="https://beets.fi/#/trade/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
+                                    target="_blank"
+                                  >
+                                    Beethovenx
+                                  </a>
+                                </s.TextDescription>
+                              </s.Container>
+                            </Col>
+                            <Col>
+                              <s.Container
+                                ai={'center'}
+                                jc={'center'}
+                                style={{
+                                  border: '1px solid var(--secondary)',
+                                  borderRadius: '10px',
+                                  padding: '30px',
+                                  height: '100%',
+                                  width: 'auto',
+                                  marginBottom: '30px',
+                                }}
+                              >
+                                <s.TextDescription
+                                  style={{
+                                    textAlign: 'center',
+                                    color: 'var(--accent-text)',
+                                    fontSize: '1.2rem',
+                                  }}
+                                >
+                                  You can invest in our deflationary pool on
+                                  Beethovenx:{' '}
+                                  <a
+                                    href="https://beets.fi/#/pool/0x99eb438a19bf25cecece633661f855adabe20a3d000100000000000000000460"
+                                    target="_blank"
+                                  >
+                                    A Symphony Of Explosive Relics
+                                  </a>
+                                </s.TextDescription>
+                              </s.Container>
+                            </Col>
+                          </Row>
 
-                      <s.TextDescription
-                        style={{
-                          textAlign: 'center',
-                          color: 'var(--accent-text)',
-                        }}
-                      >
-                        You're forging {mintAmount} Artifact(s) for{' '}
-                        {XRLCPrice} XRLC (+ gas fees).
-                      </s.TextDescription>
-                      <s.SpacerSmall />
-                      <s.Container ai={'center'} jc={'center'} fd={'row'}>
-                        <StyledRoundButton
-                          style={{ lineHeight: 0.4 }}
-                          disabled={claimingNft ? 1 : 0}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            decrementMintAmount();
-                            updatePrice(mintAmount - 1);
-                          }}
-                        >
-                          -
-                        </StyledRoundButton>
-                        <s.SpacerMedium />
-                        <s.TextDescription
-                          style={{
-                            textAlign: 'center',
-                            color: 'var(--accent-text)',
-                            fontSize: '30px',
-                          }}
-                        >
-                          {mintAmount}
-                        </s.TextDescription>
-                        <s.SpacerMedium />
-                        <StyledRoundButton
-                          disabled={claimingNft ? 1 : 0}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            incrementMintAmount();
-                            updatePrice(mintAmount + 1);
-                          }}
-                        >
-                          +
-                        </StyledRoundButton>
-                      </s.Container>
-                      <s.SpacerSmall />
-                      <s.Container ai={'center'} jc={'center'} fd={'row'}>
-                        <StyledButton
-                          style={{ fontSize: '1.6rem' }}
-                          disabled={claimingNft ? 1 : 0}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            claimNFTs();
-                            getData();
-                          }}
-                        >
-                          {claimingNft ? 'FORGING...' : 'FORGE NOW'}
-                        </StyledButton>
-                      </s.Container>
-                      </>
-                    )}
+                          <s.SpacerLarge />
+
+                          <s.TextDescription
+                            style={{
+                              textAlign: 'center',
+                              color: 'var(--accent-text)',
+                            }}
+                          >
+                            You're forging {mintAmount} Artifact(s) for{' '}
+                            {XRLCPrice} XRLC (+ gas fees).
+                          </s.TextDescription>
+                          <s.SpacerSmall />
+                          <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                            <StyledRoundButton
+                              style={{ lineHeight: 0.4 }}
+                              disabled={claimingNft ? 1 : 0}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                decrementMintAmount();
+                                updatePrice(mintAmount - 1);
+                              }}
+                            >
+                              -
+                            </StyledRoundButton>
+                            <s.SpacerMedium />
+                            <s.TextDescription
+                              style={{
+                                textAlign: 'center',
+                                color: 'var(--accent-text)',
+                                fontSize: '30px',
+                              }}
+                            >
+                              {mintAmount}
+                            </s.TextDescription>
+                            <s.SpacerMedium />
+                            <StyledRoundButton
+                              disabled={claimingNft ? 1 : 0}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                incrementMintAmount();
+                                updatePrice(mintAmount + 1);
+                              }}
+                            >
+                              +
+                            </StyledRoundButton>
+                          </s.Container>
+                          <s.SpacerSmall />
+                          <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                            <StyledButton
+                              style={{ fontSize: '1.6rem' }}
+                              disabled={claimingNft ? 1 : 0}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                claimNFTs();
+                                getData();
+                              }}
+                            >
+                              {claimingNft ? 'FORGING...' : 'FORGE NOW'}
+                            </StyledButton>
+                          </s.Container>
+                        </>
+                      )}
                     </s.Container>
-                    
                   </>
                 )}
 
@@ -978,9 +1026,9 @@ function Ashsmith() {
                       >
                         {lords.map((item, index) => {
                           return (
-                            <Col>
+                            <Col key={`maincol-${index}`}>
                               <Card
-                                key={index}
+                                key={`maincard-${index}`}
                                 style={{
                                   width: 'auto',
                                   height: '100%',
@@ -990,22 +1038,24 @@ function Ashsmith() {
                                 }}
                               >
                                 <Card.Img
+                                  key={`maincardimg-${index}`}
                                   variant="top"
                                   src={item.image.replace(
                                     'ipfs://',
                                     'https://gateway.pinata.cloud/ipfs/'
                                   )}
                                 />
-                                <Card.Body>
+                                <Card.Body key={`maincardbody-${index}`}>
                                   <Card.Title
-                                    style={{
-                                      borderBottom: '1px solid #fff',
-                                      paddingBottom: '5px',
-                                    }}
+                                    key={`maincardtitle-${index}`}
+                                    // style={{
+                                    //   borderBottom: '1px solid #fff',
+                                    //   paddingBottom: '5px',
+                                    // }}
                                   >
                                     {item.name}
                                   </Card.Title>
-                                  <Card.Text>
+                                  {/* <Card.Text key={`maincardtext-${index}`}>
                                     <ul>
                                       <li>{`${item.attributes[0].trait_type}: ${item.attributes[0].value}`}</li>
                                       <li>{`${item.attributes[1].trait_type}: ${item.attributes[1].value}`}</li>
@@ -1015,7 +1065,7 @@ function Ashsmith() {
                                       <li>{`${item.attributes[5].trait_type}: ${item.attributes[5].value}`}</li>
                                       <li>{`${item.attributes[6].trait_type}: ${item.attributes[6].value}`}</li>
                                     </ul>
-                                  </Card.Text>
+                                  </Card.Text> */}
                                 </Card.Body>
                               </Card>
                             </Col>
