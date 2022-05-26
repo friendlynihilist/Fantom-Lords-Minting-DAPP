@@ -505,7 +505,7 @@ function Stronghold() {
     const poolLength = await blockchain.smartContract.methods //how many pools have been set
       .poolLength()
       .call();
-    let idsArray = [];
+    let idsArray = []; //4
     let poolArray = [];
     if (poolLength) {
       for (let index = 0; index < poolLength; index++) {
@@ -515,15 +515,15 @@ function Stronghold() {
 
     //
     //
-    // WARNING: REMOVE CREEPTOGHOULS!
+    // WARNING: REMOVE ASCENDED LORDS!
     //
     //
 
-    // idsArray.splice(0, 1);
+    // idsArray.splice(3, 1);
 
     //
     //
-    // WARNING: REMOVE CREEPTOGHOULS!
+    // WARNING: REMOVE ASCENDED LORDS!
     //
     //
     try {
@@ -532,7 +532,7 @@ function Stronghold() {
           const address = blockchain.account.toLowerCase();
           const poolInfo = await blockchain.smartContract.methods // return nftToken (nft collection address); allocPoint; lastRewardTime; accLootPerShare
             .poolInfo(_pid)
-            .call();
+            .call(); 
           const userInfo = await blockchain.smartContract.methods // return amount (amount of owned nfts from the pool); rewardDebt
             .userInfo(_pid, address)
             .call();
@@ -610,28 +610,44 @@ function Stronghold() {
           // } else if (_pid == 2) {
           //   poolImageUri = '/assets/specter.gif';
           // } else if (_pid > 2) {
-          let firstTokenId = _pid == 0 ? 1 : 0;
-          const firstTokenUri = await poolContract.methods
-            .tokenURI(firstTokenId)
-            .call();
-          const responseFT = await fetch(
-            firstTokenUri.replace(
-              'ipfs://',
-              'https://cloudflare-ipfs.com/ipfs/'
-            )
-          );
-          const jsonifyRespFT = await responseFT.json();
+            let poolImageUri = '';
 
-          let URIprefix = jsonifyRespFT.image.startsWith(
-            'https://ipfs.io/ipfs/'
-          )
-            ? 'https://ipfs.io/ipfs/'
-            : 'ipfs://';
+            if (_pid == 0) {
+              poolImageUri = '/public/config/images/lord.gif'
+            }
+            if (_pid == 1) {
+              poolImageUri = '/public/config/images/creeptoghoul.png'
+            }
+            if (_pid == 2) {
+              poolImageUri = '/public/config/images/specter.gif'
+            }
+            if (_pid == 3) {
+              poolImageUri = '/public/config/images/ascendedlord.png'
+            }
 
-          const poolImageUri = jsonifyRespFT.image.replace(
-            URIprefix,
-            'https://cloudflare-ipfs.com/ipfs/'
-          );
+          //   let firstTokenId = _pid == 0 ? 1 : 0;
+          //   if (_pid == 3) {firstTokenId = 1}
+          //   const firstTokenUri = await poolContract.methods
+          //   .tokenURI(firstTokenId)
+          //   .call();
+          // const responseFT = await fetch(
+          //   firstTokenUri.replace(
+          //     'ipfs://',
+          //     'https://cloudflare-ipfs.com/ipfs/'
+          //   )
+          // );
+          // const jsonifyRespFT = await responseFT.json();
+
+          // let URIprefix = jsonifyRespFT.image.startsWith(
+          //   'https://ipfs.io/ipfs/'
+          // )
+          //   ? 'https://ipfs.io/ipfs/'
+          //   : 'ipfs://';
+
+          // const poolImageUri = jsonifyRespFT.image.replace(
+          //   URIprefix,
+          //   'https://cloudflare-ipfs.com/ipfs/'
+          // );
           // }
 
           //
@@ -706,7 +722,7 @@ function Stronghold() {
                 }
               } else if (_pid == 2) {
                 let tokenIdsArray = [];
-                for (let index = 0; index < 96; index++) {
+                for (let index = 0; index < 98; index++) {
                   tokenIdsArray.push(index);
                 }
                 try {
@@ -811,11 +827,11 @@ function Stronghold() {
       );
     } catch (err) {
       console.log(err);
-      if (retryCall < 20) {
-        testPoolInfo();
-        console.log(retryCall);
-        retryCall++;
-      }
+      // if (retryCall < 20) {
+      //   testPoolInfo();
+      //   console.log(retryCall);
+      //   retryCall++;
+      // }
     }
 
     // setStaked(poolArray.stakedNfts.info);
@@ -1327,7 +1343,23 @@ function Stronghold() {
                                       }}
                                     />
                                   )}
-                                  {pool.poolId > 2 && (
+                                  {pool.poolId == 3 && (
+                                    <Card.Img
+                                      key={`cardimg-${pool.poolId}`}
+                                      variant="top"
+                                      style={{ height: '18rem',
+                                      imageRendering: 'pixelated',
+                                    }}
+                                      src={'/config/images/ascendedlord.png'}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        updateDisplaySection(
+                                          pool.poolId.toString()
+                                        );
+                                      }}
+                                    />
+                                  )}
+                                  {pool.poolId > 3 && (
                                     <Card.Img
                                       key={`cardimg-${pool.poolId}`}
                                       variant="top"
