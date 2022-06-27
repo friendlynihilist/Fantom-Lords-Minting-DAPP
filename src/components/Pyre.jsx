@@ -593,7 +593,7 @@ function Pyre() {
                               item.name,
                               item.image.replace(
                                 'ipfs://',
-                                'https://gateway.pinata.cloud/ipfs/'
+                                'https://nftstorage.link/ipfs/'
                               )
                             );
                             setSelectingLord(false);
@@ -604,7 +604,7 @@ function Pyre() {
                             variant="top"
                             src={item.image.replace(
                               'ipfs://',
-                              'https://gateway.pinata.cloud/ipfs/'
+                              'https://nftstorage.link/ipfs/'
                             )}
                           />
                           <Card.Body key={`maincardbody-${index}`}>
@@ -833,7 +833,7 @@ function Pyre() {
                               item.name,
                               item.image.replace(
                                 'ipfs://',
-                                'https://gateway.pinata.cloud/ipfs/'
+                                'https://nftstorage.link/ipfs/'
                               )
                             );
                             setSelectingArtifact(false);
@@ -844,7 +844,7 @@ function Pyre() {
                             variant="top"
                             src={item.image.replace(
                               'ipfs://',
-                              'https://gateway.pinata.cloud/ipfs/'
+                              'https://nftstorage.link/ipfs/'
                             )}
                           />
                           <Card.Body key={`maincardbody-${index}`}>
@@ -955,7 +955,7 @@ function Pyre() {
               .tokenURI(getTokenId)
               .call();
             const response = await fetch(
-              tokenUri.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')
+              tokenUri.replace('ipfs://', 'https://nftstorage.link/ipfs/')
             );
             const jsonifyResp = await response.json();
             // tokensArray.push(jsonifyResp);
@@ -1433,7 +1433,7 @@ function Pyre() {
               name: result.name,
               image: result.image.replace(
                 'ipfs://',
-                'https://gateway.pinata.cloud/ipfs/'
+                'https://nftstorage.link/ipfs/'
               ),
             });
             console.log(mintedToken);
@@ -1922,7 +1922,7 @@ function Pyre() {
                                   variant="top"
                                   src={item.image.replace(
                                     'ipfs://',
-                                    'https://gateway.pinata.cloud/ipfs/'
+                                    'https://nftstorage.link/ipfs/'
                                   )}
                                 />
                                 <Card.Body key={`maincardbody-${index}`}>

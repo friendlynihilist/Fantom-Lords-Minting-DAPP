@@ -1042,7 +1042,7 @@ function Ashsmith() {
                                   variant="top"
                                   src={item.image.replace(
                                     'ipfs://',
-                                    'https://gateway.pinata.cloud/ipfs/'
+                                    'https://nftstorage.link/ipfs/'
                                   )}
                                 />
                                 <Card.Body key={`maincardbody-${index}`}>

@@ -498,7 +498,7 @@ function Stronghold() {
   //   return stakedIdsArray;
   // }
 
-  let retryCall = 0;
+  // let retryCall = 0;
 
   const testPoolInfo = async () => {
     setIsChecking(true);
@@ -532,7 +532,7 @@ function Stronghold() {
           const address = blockchain.account.toLowerCase();
           const poolInfo = await blockchain.smartContract.methods // return nftToken (nft collection address); allocPoint; lastRewardTime; accLootPerShare
             .poolInfo(_pid)
-            .call(); 
+            .call();
           const userInfo = await blockchain.smartContract.methods // return amount (amount of owned nfts from the pool); rewardDebt
             .userInfo(_pid, address)
             .call();
@@ -610,20 +610,20 @@ function Stronghold() {
           // } else if (_pid == 2) {
           //   poolImageUri = '/assets/specter.gif';
           // } else if (_pid > 2) {
-            let poolImageUri = '';
+          let poolImageUri = '';
 
-            if (_pid == 0) {
-              poolImageUri = '/public/config/images/lord.gif'
-            }
-            if (_pid == 1) {
-              poolImageUri = '/public/config/images/creeptoghoul.png'
-            }
-            if (_pid == 2) {
-              poolImageUri = '/public/config/images/specter.gif'
-            }
-            if (_pid == 3) {
-              poolImageUri = '/public/config/images/ascendedlord.png'
-            }
+          if (_pid == 0) {
+            poolImageUri = '/public/config/images/lord.gif';
+          }
+          if (_pid == 1) {
+            poolImageUri = '/public/config/images/creeptoghoul.png';
+          }
+          if (_pid == 2) {
+            poolImageUri = '/public/config/images/specter.gif';
+          }
+          if (_pid == 3) {
+            poolImageUri = '/public/config/images/ascendedlord.png';
+          }
 
           //   let firstTokenId = _pid == 0 ? 1 : 0;
           //   if (_pid == 3) {firstTokenId = 1}
@@ -633,7 +633,7 @@ function Stronghold() {
           // const responseFT = await fetch(
           //   firstTokenUri.replace(
           //     'ipfs://',
-          //     'https://cloudflare-ipfs.com/ipfs/'
+          //     'https://nftstorage.link/ipfs/'
           //   )
           // );
           // const jsonifyRespFT = await responseFT.json();
@@ -646,7 +646,7 @@ function Stronghold() {
 
           // const poolImageUri = jsonifyRespFT.image.replace(
           //   URIprefix,
-          //   'https://cloudflare-ipfs.com/ipfs/'
+          //   'https://nftstorage.link/ipfs/'
           // );
           // }
 
@@ -675,7 +675,7 @@ function Stronghold() {
                     const response = await fetch(
                       tokenUri.replace(
                         'ipfs://',
-                        'https://cloudflare-ipfs.com/ipfs/'
+                        'https://nftstorage.link/ipfs/'
                       )
                     );
                     let jsonifyResp = await response.json();
@@ -707,8 +707,8 @@ function Stronghold() {
                         const response = await fetch(
                           tokenUri
                           // .replace(
-                          //   'https://gateway.pinata.cloud/ipfs/',
-                          //   'https://cloudflare-ipfs.com/ipfs/'
+                          //   'https://nftstorage.link/ipfs/',
+                          //   'https://nftstorage.link/ipfs/'
                           // )
                         );
                         let jsonifyResp = await response.json();
@@ -740,7 +740,7 @@ function Stronghold() {
                         const response = await fetch(
                           tokenUri.replace(
                             'ipfs://',
-                            'https://gateway.pinata.cloud/ipfs/'
+                            'https://nftstorage.link/ipfs/'
                           )
                         );
                         let jsonifyResp = await response.json();
@@ -768,7 +768,7 @@ function Stronghold() {
                   const response = await fetch(
                     tokenUri.replace(
                       'ipfs://',
-                      'https://cloudflare-ipfs.com/ipfs/'
+                      'https://nftstorage.link/ipfs/'
                     )
                   );
                   let jsonifyResp = await response.json();
@@ -1107,6 +1107,27 @@ function Stronghold() {
                               </small>
                             </s.TextDescription>
                             <s.SpacerLarge />
+                            <StyledImg
+                              alt={'Discover the Stronghold'}
+                              src={'/config/images/lordscolab.png'}
+                              style={{ imageRendering: 'pixelated' }}
+                            />
+                            <s.TextDescription
+                              style={{
+                                textAlign: 'center',
+                                color: 'var(--accent-text)',
+                                paddingBottom: '30px'
+                              }}
+                            >
+                              Explore the green pastures of our friends:{' '}
+                              <a
+                                href="https://wolfland.games/land"
+                                target="_blank"
+                              >
+                                Fantom Wolf Game Reborn
+                              </a>
+                              !
+                            </s.TextDescription>
                           </s.Container>
                           <s.SpacerLarge />
                         </s.Container>
@@ -1180,7 +1201,7 @@ function Stronghold() {
                               </s.TextDescription>
                             </s.Container>
                           </Col>
-                          <Col>
+                          {/* <Col>
                             <s.Container
                               ai={'center'}
                               jc={'center'}
@@ -1210,7 +1231,7 @@ function Stronghold() {
                                 </a>
                               </s.TextDescription>
                             </s.Container>
-                          </Col>
+                          </Col> */}
                         </Row>
                         <s.SpacerLarge />
                         <Nav
@@ -1347,9 +1368,10 @@ function Stronghold() {
                                     <Card.Img
                                       key={`cardimg-${pool.poolId}`}
                                       variant="top"
-                                      style={{ height: '18rem',
-                                      imageRendering: 'pixelated',
-                                    }}
+                                      style={{
+                                        height: '18rem',
+                                        imageRendering: 'pixelated',
+                                      }}
                                       src={'/config/images/ascendedlord.png'}
                                       onClick={(e) => {
                                         e.preventDefault();
@@ -1711,12 +1733,12 @@ function Stronghold() {
                                           parseInt(pool.poolId) == 2
                                             ? id.image
                                             : // .replace(
-                                              //     'https://gateway.pinata.cloud/ipfs/',
-                                              //     'https://cloudflare-ipfs.com/ipfs/'
+                                              //     'https://nftstorage.link/ipfs/',
+                                              //     'https://nftstorage.link/ipfs/'
                                               //   )
                                               id.image.replace(
                                                 'ipfs://',
-                                                'https://cloudflare-ipfs.com/ipfs/'
+                                                'https://nftstorage.link/ipfs/'
                                               )
                                         }
                                       />
@@ -1845,12 +1867,12 @@ function Stronghold() {
                                           parseInt(pool.poolId) == 2
                                             ? id.image
                                             : // .replace(
-                                              //     'https://gateway.pinata.cloud/ipfs/',
-                                              //     'https://cloudflare-ipfs.com/ipfs/'
+                                              //     'https://nftstorage.link/ipfs/',
+                                              //     'https://nftstorage.link/ipfs/'
                                               //   )
                                               id.image.replace(
                                                 'ipfs://',
-                                                'https://cloudflare-ipfs.com/ipfs/'
+                                                'https://nftstorage.link/ipfs/'
                                               )
                                         }
                                       />

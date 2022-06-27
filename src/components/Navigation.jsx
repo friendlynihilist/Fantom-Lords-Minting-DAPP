@@ -226,6 +226,9 @@ function Navigation() {
             <NavLink className="nav-link" to="/pyre">
               Pyre
             </NavLink>
+            <NavLink className="nav-link" to="/dungeon">
+              Dungeon
+            </NavLink>
           </Nav>
         </Navbar.Collapse>
         <Navbar>

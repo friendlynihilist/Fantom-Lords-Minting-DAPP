@@ -9,6 +9,7 @@ import {
   Pyre,
   Stronghold,
   Lore,
+  Dungeon,
   Ashsmith
 } from "./components";
 import reportWebVitals from "./reportWebVitals";
@@ -24,11 +25,11 @@ ReactDOM.render(
     <Navigation />
     <Routes>
       <Route path="/" element={<App />} />
-      {/* <Route path="/army" element={<Army />} /> */}
       <Route path="/lore" element={<Lore />} />
       <Route path="/stronghold" element={<Stronghold />} />
       <Route path="/ashsmith" element={<Ashsmith />} />
       <Route path="/pyre" element={<Pyre />} />
+      <Route path="/dungeon" element={<Dungeon />} />
     </Routes>
     <Footer />
     </Router>

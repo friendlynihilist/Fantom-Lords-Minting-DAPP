@@ -372,15 +372,21 @@ function App() {
             <s.SpacerLarge />
 
             <s.TextTitle
-                  style={{ textAlign: 'center', color: 'var(--accent-text)', fontSize: '1.4rem' }}
-                >
-                  Delve into the Stronghold's depths and start earning <a
-                              href="https://ftmscan.com/token/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
-                              target="_blank"
-                            >
-                              $XRLC
-                            </a> now!
-                </s.TextTitle>
+              style={{
+                textAlign: 'center',
+                color: 'var(--accent-text)',
+                fontSize: '1.4rem',
+              }}
+            >
+              Delve into the Stronghold's depths and start earning{' '}
+              <a
+                href="https://ftmscan.com/token/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
+                target="_blank"
+              >
+                $XRLC
+              </a>{' '}
+              now!
+            </s.TextTitle>
 
             {/* <s.SpacerLarge /> */}
 
@@ -624,10 +630,8 @@ function App() {
                   generated from over 70+ possible traits
                 </span>
                 , including Classes, Ancestries, Weapons, Armors, Relics and
-                more. Moreover, Lords metadata are
-                hosted on IPFS and
-                validated on the Blockchain as ERC-721 tokens on the Fantom
-                blockchain.
+                more. Moreover, Lords metadata are hosted on IPFS and validated
+                on the Blockchain as ERC-721 tokens on the Fantom blockchain.
               </s.TextDescription>
               <s.SpacerMedium />
               {/* <s.SpacerSmall /> */}
@@ -669,9 +673,10 @@ function App() {
               textAlign: 'left',
             }}
           >
-            Owning a Fantom Lord gives you immediate access to lordly rewards: first and foremost, you gain the title of
-            Gallant Lord and could join our The Guild DAO in order to participate to major exclusive events, giveaway and collective
-            decentralised world-building.
+            Owning a Fantom Lord gives you immediate access to lordly rewards:
+            first and foremost, you gain the title of Gallant Lord and could
+            join our The Guild DAO in order to participate to major exclusive
+            events, giveaway and collective decentralised world-building.
           </s.TextDescription>
           <s.SpacerMedium />
           <s.TextDescription
@@ -679,9 +684,11 @@ function App() {
               textAlign: 'left',
             }}
           >
-            Additionally, you gain access to The Stronghold, our staking platform (see below). Send your Lord to a quest and receive daily yield in Arcane Relics
-            ($XRLC). Buy and collect Artifacts, or burn them to make your Lords ascend and become super-cool powerhouses (April 2022).
-           
+            Additionally, you gain access to The Stronghold, our staking
+            platform (see below). Send your Lord to a quest and receive daily
+            yield in Arcane Relics ($XRLC). Buy and collect Artifacts, or burn
+            them to make your Lords ascend and become super-cool powerhouses
+            (April 2022).
           </s.TextDescription>
           <s.SpacerMedium />
           <s.TextDescription
@@ -689,9 +696,11 @@ function App() {
               textAlign: 'left',
             }}
           >
-            Last but not least, you will be eligible to join the closed-beta of the first Fantom dungeon-crawler Play2Earn game (June 2022). Delve deeper into The Maze,
-            level up your Lords, unleash deadly spells and call forth the power of Fantom to defeat your foes and gain REAL loot!
-           
+            Last but not least, you will be eligible to join the closed-beta of
+            the first Fantom dungeon-crawler Play2Earn game (June 2022). Delve
+            deeper into The Maze, level up your Lords, unleash deadly spells and
+            call forth the power of Fantom to defeat your foes and gain REAL
+            loot!
           </s.TextDescription>
           <s.SpacerMedium />
           <s.TextDescription
