@@ -237,22 +237,12 @@ function Dungeon() {
                 hideCursorAfterText="true"
                 text="Enter the Dungeon..."
                 typeSpeed={100}
-                // scrollArea={myAppRef}
+              // scrollArea={myAppRef}
               />
             </HeaderTitle>
 
             <s.SpacerLarge />
-            <iframe
-              frameborder="0"
-              src="https://itch.io/embed-upload/6040138?color=333333"
-              allowfullscreen=""
-              width="1280"
-              height="740"
-            >
-              <a href="https://wolfgamesita.itch.io/fantom-lords-game">
-                Play Fantom Lords Game on itch.io
-              </a>
-            </iframe>
+            <iframe frameborder="0" src="https://itch.io/embed-upload/6052205?color=333333" allowfullscreen="" width="1280" height="740"><a href="https://wolfgamesita.itch.io/fantom-lords-game">Play Fantom Lords Game on itch.io</a></iframe>
           </s.Container>
         </ResponsiveWrapper>
         <s.SpacerMedium />
