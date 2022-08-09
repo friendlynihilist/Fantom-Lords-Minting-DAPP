@@ -446,6 +446,28 @@ function Stronghold() {
       });
   };
 
+  const harvestAll = async () => {
+    setFeedback(`Harvesting...`);
+    await blockchain.smartContract.methods.harvestAll().send({
+        to: CONFIG.CONTRACT_ADDRESS,
+        from: blockchain.account.toLowerCase(),
+        maxPriorityFeePerGas: null,
+        maxFeePerGas: null,
+        type: '0x2',
+    })
+    .once('error', (err) => {
+      console.log(err);
+      setFeedback('Sorry, something went wrong please try again later.');
+    })
+    .then((receipt) => {
+      console.log(receipt);
+      setFeedback(`You've harvested!`);
+      dispatch(fetchData(blockchain.account));
+      testPoolInfo();
+      setIsDoingTransaction(false);
+    });
+  }
+
   const testSetApprovalForAll = async (_pid) => {
     setFeedback(`You're approving this collection...`);
     setIsDoingTransaction(true);
@@ -1617,7 +1639,21 @@ function Stronghold() {
                             )
                           )}
                         </Row>
-
+                          <StyledButton
+                            style={{
+                              fontSize: '1.2rem',
+                              fontWeight: 'normal',
+                              width: 'auto',
+                            }}
+                            variant="primary"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              harvestAll();
+                              testPoolInfo();
+                            }}
+                          >
+                            Harvest All
+                          </StyledButton>
                         <s.Container
                           ai={'center'}
                           jc={'center'}

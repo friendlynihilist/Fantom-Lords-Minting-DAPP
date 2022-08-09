@@ -11,7 +11,7 @@ import { faDiscord } from '@fortawesome/free-brands-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-h5-audio-player/lib/styles.css';
-import tune from './assets/fantomlords.mp3';
+import tune from './assets/fantomLords.mp3';
 import TypeWriterEffect from 'react-typewriter-effect';
 
 library.add(faUser);
