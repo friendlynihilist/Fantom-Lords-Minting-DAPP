@@ -15,3 +15,17 @@
 .zoom:hover {
   transform: translateY(-10px);
 }
+
+.rotating {
+  animation: rotating 2s linear infinite;
+}
+
+
+@keyframes rotating {
+  from{
+      -webkit-transform: rotate(0deg);
+  }
+  to{
+      -webkit-transform: rotate(360deg);
+  }
+}

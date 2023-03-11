@@ -154,6 +154,18 @@ export const StyledLink = styled.a`
   text-decoration: none;
 `;
 
+export const StyledInput = styled.input`
+  padding: 5px;
+  background-color: var(--primary);  
+  border-color: var(--secondary);  
+  color: white;
+  min-width: 50%;
+`;
+
+export const LordCard = styled(Card)`
+
+`;
+
 function Ashsmith() {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
@@ -182,6 +194,10 @@ function Ashsmith() {
   const TOKENS_ARRAY = [];
   const [lords, setLords] = useState(null);
   const [isChecking, setIsChecking] = useState(false);
+  const [isCheckingNameChange, setIsCheckingNameChange] = useState(false);
+  const [isCheckingDescriptionChange, setIsCheckingDescriptionChange] = useState(false);
+  const [changingAscendedLordName, setChangingAscendedLordName] = useState(false);
+  const [changingAscendedLordDescription, setChangingAscendedLordDescription] = useState(false);
   const [ownedXRLC, setOwnedXRLC] = useState(false);
   const [approvalInfo, setApproval] = useState(false);
   const [isDoingTransaction, setIsDoingTransaction] = useState(false);
@@ -189,7 +205,14 @@ function Ashsmith() {
   const [XRLCPrice, setXRLCPrice] = useState(null);
   const [playing, setPlaying] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [ascendedLords, setAscendedLords] = useState(null);
   const audio = useRef(new Audio(tune));
+  const [selectedAscendedLord, setSelectedAscendedLord] = useState({});
+  const [changeLordNameInput, setChangeLordNameInput] = useState("");
+  const [changeLordDescriptionInput, setChangeLordDescriptionInput] = useState("");
+  const [nameChangeMenuOpen, setNameChangeMenuOpen] = useState(false);
+  const [descriptionChangeMenuOpen, setDescriptionChangeMenuOpen] = useState(false);
+
 
   audio.current.onended = function () {
     setPlaying(false);
@@ -561,6 +584,195 @@ function Ashsmith() {
     getData();
   }, [blockchain.account]);
 
+
+  const listAscendedLordsOfOwner = async (address) => {
+    const abiResponse = await fetch('/config/abi_ascension.json', {
+      //abi_ftl1.json
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    const ASC_ABI = await abiResponse.json();
+
+    const web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+    const ascLordsContract = new web3.eth.Contract(
+      ASC_ABI,
+      '0x6139b9C548FBd1C50d2768f3464D89c8744aB5f2'.toLowerCase()
+    );
+
+    const balance = await ascLordsContract.methods
+      .balanceOf(address.toLowerCase())
+      .call();
+    let idsArray = [];
+    let tokensArray = [];
+
+    if (balance >= 1) {
+      //if address owns Lord(s), then calling tokenOfOwnersByIndex is possible
+
+      // PREPARING THE IDs ARRAY
+      for (let index = 0; index < balance; index++) {
+        idsArray.push(index);
+      }
+
+      try {
+        await Promise.all(
+          idsArray.map(async (id) => {
+            const getTokenId = await ascLordsContract.methods
+              .tokenOfOwnerByIndex(address.toLowerCase(), id)
+              .call();
+            const tokenUri = await ascLordsContract.methods
+              .tokenURI(getTokenId)
+              .call();
+            const response = await fetch(tokenUri);
+            const jsonifyResp = await response.json();
+            // tokensArray.push(jsonifyResp);
+            tokensArray.push({id: getTokenId, ...jsonifyResp});
+          })
+        );
+      } catch (error) {
+        console.log(error);
+      }
+
+      // SETSTATE SPINNER FALSE
+
+      // SIMPLE SORT - ADD MORE SORTING OPTION IN THE FUTURE
+      // if (tokensArray) {
+      //   if (tokensArray[0].edition) {
+      //     tokensArray = tokensArray.sort(function (obj1, obj2) {
+      //       return obj1.edition - obj2.edition;
+      //     });
+      //   }
+      // }
+      //
+    }
+    setIsChecking(false);
+    setAscendedLords(tokensArray);
+    console.log(tokensArray);
+  };
+
+  const handleNameChangeInput = function(event) {
+    setChangeLordNameInput(event.target.value);
+  }
+
+  const handleDescriptionChangeInput = function(event) {
+    setChangeLordDescriptionInput(event.target.value);
+  }
+
+  const notifyNameChange = async function(receipt, id, name) {
+    const response = await fetch('https://demostris-inc.com/fantomlords/ascendedLords/nameChange/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ receipt, id, name })
+    });
+  }
+
+  const notifyDescriptionChange = async function(receipt, id, description) {
+    const response = await fetch('https://demostris-inc.com/fantomlords/ascendedLords/descriptionChange/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ receipt, id, description })
+    });
+  }
+
+
+  const changeAscendedLordName = async function() {
+    setFeedback(`Sending name change request...`);
+    setChangingAscendedLordName(true);
+    const web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+    const XRLCAbi = [{
+        constant: false,
+        inputs: [{
+          name: "_to",
+          type: "address"
+        }, {
+          name: "_value",
+          type: "uint256"
+        }],
+        name: "transfer",
+        outputs: [{
+          name: "",
+          type: "bool"
+        }],
+        type: "function",
+        name: 'transfer',
+    }];
+    const XRLCAddress = '0xe5586582e1a60e302a53e73e4fadccaf868b459a'.toLowerCase();
+    const XRLCContract = new web3.eth.Contract(XRLCAbi, XRLCAddress);
+        // notifyNameChange({}, selectedAscendedLord.edition, changeLordNameInput);
+    XRLCContract.methods.transfer(
+      '0x4a03721C829Ae3d448bF37Cac21527cbE75fc4Cb',
+      web3.utils.toBN(22000000000000000000),
+    ).send({
+        from: blockchain.account.toLowerCase(),
+      })
+      .once('error', (err) => {
+        setFeedback('Something went wrong. Please, try again later.');
+        console.log(err);
+      })
+      .then((receipt) => {
+        setFeedback(`The request has been sent...`);
+        console.log(receipt);
+        notifyNameChange(receipt, selectedAscendedLord.id, changeLordNameInput);
+      })
+      .finally(() => {
+        setChangingAscendedLordName(false);
+      });
+  }
+
+  const changeAscendedLordDescription = async function() {
+    setFeedback(`Sending description change request...`);
+    setChangingAscendedLordDescription(true);
+    const web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+    const XRLCAbi = [{
+        constant: false,
+        inputs: [{
+          name: "_to",
+          type: "address"
+        }, {
+          name: "_value",
+          type: "uint256"
+        }],
+        name: "transfer",
+        outputs: [{
+          name: "",
+          type: "bool"
+        }],
+        type: "function",
+        name: 'transfer',
+    }];
+    const XRLCAddress = '0xe5586582e1a60e302a53e73e4fadccaf868b459a'.toLowerCase();
+    const XRLCContract = new web3.eth.Contract(XRLCAbi, XRLCAddress);
+        // notifyNameChange({}, selectedAscendedLord.edition, changeLordNameInput);
+    XRLCContract.methods.transfer(
+      '0x4a03721C829Ae3d448bF37Cac21527cbE75fc4Cb',
+      web3.utils.toBN(22000000000000000000),
+    ).send({
+        from: blockchain.account.toLowerCase(),
+      })
+      .once('error', (err) => {
+        setFeedback('Something went wrong. Please, try again later.');
+        console.log(err);
+      })
+      .then((receipt) => {
+        setFeedback(`The request has been sent...`);
+        console.log(receipt);
+        notifyDescriptionChange(receipt, selectedAscendedLord.id, changeLordDescriptionInput);
+      })
+      .finally(() => {
+        setChangingAscendedLordDescription(false);
+      });
+  }
+
   return (
     <s.Screen>
       <s.Container
@@ -842,44 +1054,6 @@ function Ashsmith() {
                                   >
                                     SpookySwap
                                   </a>
-                                  <br />
-                                  <a
-                                    href="https://beets.fi/#/trade/0xE5586582E1a60E302a53e73E4FaDccAF868b459a"
-                                    target="_blank"
-                                  >
-                                    Beethovenx
-                                  </a>
-                                </s.TextDescription>
-                              </s.Container>
-                            </Col>
-                            <Col>
-                              <s.Container
-                                ai={'center'}
-                                jc={'center'}
-                                style={{
-                                  border: '1px solid var(--secondary)',
-                                  borderRadius: '10px',
-                                  padding: '30px',
-                                  height: '100%',
-                                  width: 'auto',
-                                  marginBottom: '30px',
-                                }}
-                              >
-                                <s.TextDescription
-                                  style={{
-                                    textAlign: 'center',
-                                    color: 'var(--accent-text)',
-                                    fontSize: '1.2rem',
-                                  }}
-                                >
-                                  You can invest in our deflationary pool on
-                                  Beethovenx:{' '}
-                                  <a
-                                    href="https://beets.fi/#/pool/0x99eb438a19bf25cecece633661f855adabe20a3d000100000000000000000460"
-                                    target="_blank"
-                                  >
-                                    A Symphony Of Explosive Relics
-                                  </a>
                                 </s.TextDescription>
                               </s.Container>
                             </Col>
@@ -887,64 +1061,75 @@ function Ashsmith() {
 
                           <s.SpacerLarge />
 
-                          <s.TextDescription
-                            style={{
-                              textAlign: 'center',
-                              color: 'var(--accent-text)',
-                            }}
-                          >
-                            You're forging {mintAmount} Artifact(s) for{' '}
-                            {XRLCPrice} XRLC (+ gas fees).
-                          </s.TextDescription>
-                          <s.SpacerSmall />
-                          <s.Container ai={'center'} jc={'center'} fd={'row'}>
-                            <StyledRoundButton
-                              style={{ lineHeight: 0.4 }}
-                              disabled={claimingNft ? 1 : 0}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                decrementMintAmount();
-                                updatePrice(mintAmount - 1);
-                              }}
-                            >
-                              -
-                            </StyledRoundButton>
-                            <s.SpacerMedium />
-                            <s.TextDescription
-                              style={{
-                                textAlign: 'center',
-                                color: 'var(--accent-text)',
-                                fontSize: '30px',
-                              }}
-                            >
-                              {mintAmount}
-                            </s.TextDescription>
-                            <s.SpacerMedium />
-                            <StyledRoundButton
-                              disabled={claimingNft ? 1 : 0}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                incrementMintAmount();
-                                updatePrice(mintAmount + 1);
-                              }}
-                            >
-                              +
-                            </StyledRoundButton>
-                          </s.Container>
-                          <s.SpacerSmall />
-                          <s.Container ai={'center'} jc={'center'} fd={'row'}>
-                            <StyledButton
-                              style={{ fontSize: '1.6rem' }}
-                              disabled={claimingNft ? 1 : 0}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                claimNFTs();
-                                getData();
-                              }}
-                            >
-                              {claimingNft ? 'FORGING...' : 'FORGE NOW'}
-                            </StyledButton>
-                          </s.Container>
+                          <Row style={{width: "100%"}}>
+                            <Col style={{
+                              border: '1px solid var(--secondary)',
+                              borderRadius: '10px',
+                              padding: '30px',
+                              height: '100%',
+                              width: 'auto',
+                              marginBottom: '30px',
+                            }}>
+                              <s.TextDescription
+                                style={{
+                                  textAlign: 'center',
+                                  color: 'var(--accent-text)',
+                                }}
+                              >
+                                Forge {mintAmount} Artifact(s) for{' '}
+                                {XRLCPrice} XRLC (+ gas fees).
+                              </s.TextDescription>
+                              <s.SpacerSmall />
+                              <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                                <StyledRoundButton
+                                  style={{ lineHeight: 0.4 }}
+                                  disabled={claimingNft ? 1 : 0}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    decrementMintAmount();
+                                    updatePrice(mintAmount - 1);
+                                  }}
+                                >
+                                  -
+                                </StyledRoundButton>
+                                <s.SpacerMedium />
+                                <s.TextDescription
+                                  style={{
+                                    textAlign: 'center',
+                                    color: 'var(--accent-text)',
+                                    fontSize: '30px',
+                                  }}
+                                >
+                                  {mintAmount}
+                                </s.TextDescription>
+                                <s.SpacerMedium />
+                                <StyledRoundButton
+                                  disabled={claimingNft ? 1 : 0}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    incrementMintAmount();
+                                    updatePrice(mintAmount + 1);
+                                  }}
+                                >
+                                  +
+                                </StyledRoundButton>
+                              </s.Container>
+                              <s.SpacerSmall />
+                              <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                                <StyledButton
+                                  style={{ fontSize: '1.6rem' }}
+                                  disabled={claimingNft ? 1 : 0}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    claimNFTs();
+                                    getData();
+                                  }}
+                                >
+                                  {claimingNft ? 'FORGING...' : 'FORGE NOW'}
+                                </StyledButton>
+                              </s.Container>
+                            </Col>
+                          </Row>
                         </>
                       )}
                     </s.Container>
@@ -1025,6 +1210,7 @@ function Ashsmith() {
                         className="g-4"
                       >
                         {lords.map((item, index) => {
+                          if(!item || "image" in item) { return(<></>); }
                           return (
                             <Col key={`maincol-${index}`}>
                               <Card
@@ -1073,6 +1259,189 @@ function Ashsmith() {
                         })}
                       </Row>
                     )}
+                  </>
+                )}
+                
+                <s.SpacerLarge />
+                <s.SpacerLarge />
+                { /* change lord name */ }
+                {!nameChangeMenuOpen || !ascendedLords ? (
+                  <>
+                    {/* <s.TextDescription
+                      style={{
+                        textAlign: 'center',
+                        color: 'var(--accent-text)',
+                      }}
+                    >
+                      Click to check your Fantom Lords' army
+                    </s.TextDescription> */}
+                    <s.SpacerSmall />
+                    <s.Container
+                      ai={'center'}
+                      jc={'center'}
+                      fd={'row'}
+                      style={{
+                        border: '1px solid var(--secondary)',
+                        borderRadius: '10px',
+                        padding: '30px',
+                        width: 'auto',
+                      }}
+                    >
+                      {!isCheckingNameChange && (
+                        <StyledButton
+                          style={{ fontSize: '1.5rem' }}
+                          disabled={claimingNft ? 1 : 0}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsCheckingNameChange(true);
+                            setNameChangeMenuOpen(true);
+                            listAscendedLordsOfOwner(blockchain.account);
+                            // getData();
+                          }}
+                        >
+                          CHANGE YOUR LORD'S NAME
+                        </StyledButton>
+                      )}
+                      {isCheckingNameChange && (
+                        <Spinner
+                          animation="border"
+                          variant="primary"
+                          role="status"
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      )}
+                    </s.Container>
+
+                    <s.SpacerSmall />
+                  </>
+                ) : (
+                  <>
+                    {(!ascendedLords.length) ? (
+                      <s.Container ai={'center'} jc={'center'}>
+                        <s.SpacerSmall />
+                        <s.TextDescription
+                          style={{
+                            textAlign: 'center',
+                            color: 'var(--accent-text)',
+                          }}
+                        >
+                          You don't seem to have any Ascended Lords...
+                          <br />
+                          You have to sacrifice something first...
+                        </s.TextDescription>
+                      </s.Container>
+                    ) : (
+                      <div style={{
+                            border: '1px solid var(--secondary)',
+                            borderRadius: '10px',
+                            padding: '30px',
+                            height: 'auto',
+                            width: 'auto',
+                            marginBottom: '30px',
+                          }}>
+                        <Row style={{width: "100%"}}>
+                          <Col>
+                            <s.TextDescription
+                              style={{
+                                textAlign: 'center',
+                                color: 'var(--accent-text)',
+                              }}
+                            >
+                              Change your lord's name
+                            </s.TextDescription>
+                            <s.SpacerSmall />
+                            <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                              <StyledInput 
+                                type={"text"}
+                                value={changeLordNameInput}
+                                onChange={(event) => handleNameChangeInput(event) }></StyledInput>
+                            </s.Container>
+                            <s.SpacerSmall />
+                          </Col>
+                        </Row>
+                        <Row
+                          xs={1}
+                          md={2}
+                          lg={ascendedLords.length > 1 ? 5 : ''}
+                          className="g-4">
+                          {ascendedLords.map((item, index) => {
+                            if(!item || ! "image" in item) { return; }
+                            return (
+                              <Col key={`maincol-${index}`}>
+                                <LordCard
+                                  key={`maincard-${index}`}
+                                  style={{
+                                    width: 'auto',
+                                    height: '100%',
+                                    borderRadius: '10px',
+                                    backgroundColor: 'var(--primary-dark)',
+                                    boxShadow: (item.id == selectedAscendedLord.id ? "0 0 10px #dfed9e" : "none"),
+                                    color: '#fff',
+                                  }}
+                                  onClick={(e) => {
+                                    setSelectedAscendedLord(item);
+                                    setChangeLordNameInput(item.name);
+                                  }}
+                                >
+                                  <Card.Img
+                                    key={`maincardimg-${index}`}
+                                    variant="top"
+                                    src={item.image.replace(
+                                      'ipfs://',
+                                      'https://nftstorage.link/ipfs/'
+                                    )}
+                                  />
+                                  <Card.Body key={`maincardbody-${index}`}>
+                                    <Card.Title
+                                      key={`maincardtitle-${index}`}
+                                      // style={{
+                                      //   borderBottom: '1px solid #fff',
+                                      //   paddingBottom: '5px',
+                                      // }}
+                                    >
+                                      {item.name}
+                                    </Card.Title>
+                                  </Card.Body>
+                                </LordCard>
+                              </Col>
+                            );
+                          })}
+                        </Row>
+                        <s.SpacerLarge />
+                        <Row>
+                          <Col>
+                            <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                              <StyledButton
+                                style={{ fontSize: '1.6rem' }}
+                                disabled={changingAscendedLordName ? 1 : 0}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setNameChangeMenuOpen(true);
+                                  changeAscendedLordName();
+                                  // getData();
+                                }}
+                              >
+                                {changingAscendedLordName ? 'Changing...' : 'Change your lord\'s name'.toUpperCase()}
+                              </StyledButton>
+                            </s.Container>
+                            <s.SpacerLarge />
+                            <s.TextDescription style={{ textAlign: 'center', color: 'var(--accent-text)', opacity: 0.7  }}>
+                              (Ascended Lords Only) <br/>
+                            </s.TextDescription>
+                            <s.TextDescription style={{ textAlign: 'left', color: 'var(--accent-text)', opacity: 0.7  }}>
+                              Lord Enri will personally review and change your name,
+                              if you make a mistake you can always ask for support, 
+                              refund, or rework of your spelling. <br/>
+                              Everything except rude and offensive material will be accepted, 
+                              for support contact Lord Enri on discord at Enri#6877,
+                              it will usually take 48 hours for the name change to be finalized.
+                            </s.TextDescription>
+                          </Col>
+                        </Row>
+                        {changingAscendedLordName && <AlertDismissible />}
+                      </div>
+                    )}
                     {/* <s.TextDescription
                                     style={{
                                         textAlign: 'center',
@@ -1081,6 +1450,185 @@ function Ashsmith() {
                                 >
                                     Lorem Ipsum
                                 </s.TextDescription> */}
+                  </>
+                )}
+                { /* change lord description */ }
+                {!descriptionChangeMenuOpen || !ascendedLords ? (
+                  <>
+                    {/* <s.TextDescription
+                      style={{
+                        textAlign: 'center',
+                        color: 'var(--accent-text)',
+                      }}
+                    >
+                      Click to check your Fantom Lords' army
+                    </s.TextDescription> */}
+                    <s.SpacerSmall />
+                    <s.Container
+                      ai={'center'}
+                      jc={'center'}
+                      fd={'row'}
+                      style={{
+                        border: '1px solid var(--secondary)',
+                        borderRadius: '10px',
+                        padding: '30px',
+                        width: 'auto',
+                      }}
+                    >
+                      {!isCheckingDescriptionChange && (
+                        <StyledButton
+                          style={{ fontSize: '1.5rem' }}
+                          disabled={claimingNft ? 1 : 0}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsCheckingDescriptionChange(true);
+                            setDescriptionChangeMenuOpen(true);
+                            listAscendedLordsOfOwner(blockchain.account);
+                            // getData();
+                          }}
+                        >
+                          CHANGE YOUR LORD'S DESCRIPTION
+                        </StyledButton>
+                      )}
+                      {isCheckingDescriptionChange && (
+                        <Spinner
+                          animation="border"
+                          variant="primary"
+                          role="status"
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      )}
+                    </s.Container>
+
+                    <s.SpacerSmall />
+                  </>
+                ) : (
+                  <>
+                    {!ascendedLords.length ? (
+                      <s.Container ai={'center'} jc={'center'}>
+                        <s.SpacerSmall />
+                        <s.TextDescription
+                          style={{
+                            textAlign: 'center',
+                            color: 'var(--accent-text)',
+                          }}
+                        >
+                          You don't seem to have any Ascended Lords...
+                          <br />
+                          You have to sacrifice something first...
+                        </s.TextDescription>
+                      </s.Container>
+                    ) : (
+                      <div style={{
+                            border: '1px solid var(--secondary)',
+                            borderRadius: '10px',
+                            padding: '30px',
+                            height: 'auto',
+                            width: 'auto',
+                            marginBottom: '30px',
+                          }}>
+                        <Row style={{width: "100%"}}>
+                          <Col>
+                            <s.TextDescription
+                              style={{
+                                textAlign: 'center',
+                                color: 'var(--accent-text)',
+                              }}
+                            >
+                              Change your lord's description
+                            </s.TextDescription>
+                            <s.SpacerSmall />
+                            <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                              <StyledInput 
+                                type={"text"}
+                                value={changeLordDescriptionInput}
+                                onChange={(event) => handleDescriptionChangeInput(event) }></StyledInput>
+                            </s.Container>
+                            <s.SpacerSmall />
+                          </Col>
+                        </Row>
+                        <Row
+                          xs={1}
+                          md={2}
+                          lg={ascendedLords.length > 1 ? 5 : ''}
+                          className="g-4">
+                          {ascendedLords.map((item, index) => {
+                            if(!item || ! "image" in item) { return; }
+                            return (
+                              <Col key={`maincol-${index}`}>
+                                <LordCard
+                                  key={`maincard-${index}`}
+                                  style={{
+                                    width: 'auto',
+                                    height: '100%',
+                                    borderRadius: '10px',
+                                    backgroundColor: 'var(--primary-dark)',
+                                    color: '#fff',
+                                    boxShadow: (item.id == selectedAscendedLord.id ? "0 0 10px #dfed9e" : "none")
+                                  }}
+                                  onClick={(e) => {
+                                    setSelectedAscendedLord(item);
+                                    setChangeLordDescriptionInput(item.description);
+                                  }}
+                                >
+                                  <Card.Img
+                                    key={`maincardimg-${index}`}
+                                    variant="top"
+                                    src={item.image.replace(
+                                      'ipfs://',
+                                      'https://nftstorage.link/ipfs/'
+                                    )}
+                                  />
+                                  <Card.Body key={`maincardbody-${index}`}>
+                                    <Card.Title
+                                      key={`maincardtitle-${index}`}
+                                      // style={{
+                                      //   borderBottom: '1px solid #fff',
+                                      //   paddingBottom: '5px',
+                                      // }}
+                                    >
+                                      {item.name}
+                                    </Card.Title>
+                                  </Card.Body>
+                                </LordCard>
+                              </Col>
+                            );
+                          })}
+                        </Row>
+                        <s.SpacerLarge />
+                        <Row>
+                          <Col>
+                            <s.Container ai={'center'} jc={'center'} fd={'row'}>
+                              <StyledButton
+                                style={{ fontSize: '1.6rem' }}
+                                disabled={changingAscendedLordDescription ? 1 : 0}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  changeAscendedLordDescription();
+                                  // getData();
+                                }}
+                              >
+                                {changingAscendedLordDescription ? 'Changing...' : 'Change your lord\'s description'.toUpperCase()}
+                              </StyledButton>
+                            </s.Container>
+                            <s.SpacerLarge />
+                            <s.TextDescription style={{ textAlign: 'center', color: 'var(--accent-text)', opacity: 0.7  }}>
+                              (Ascended Lords Only) <br/>
+                            </s.TextDescription>
+                            <s.TextDescription style={{ textAlign: 'left', color: 'var(--accent-text)', opacity: 0.7  }}>
+                              Lord Enri will personally review and change your description,
+                              if you make a mistake you can always ask for support, 
+                              refund, or rework of your spelling. <br/>
+                              Everything except rude and offensive material will be accepted, 
+                              for support contact Lord Enri on discord at Enri#6877,
+                              it will usually take 48 hours for the description change to be finalized.
+                            </s.TextDescription>
+                          </Col>
+                        </Row>
+                        {changingAscendedLordDescription && <AlertDismissible />}
+                      </div>
+                    )}
                   </>
                 )}
               </>

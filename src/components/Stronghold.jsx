@@ -681,7 +681,7 @@ function Stronghold() {
               const totalAmountArray = Array.apply(null, {
                 length: notStakedNfts,
               }).map(Number.call, Number); // create an array from the number of notStakedNfts
-
+              
               try {
                 await Promise.all(
                   totalAmountArray.map(async (_tid) => {
@@ -691,9 +691,14 @@ function Stronghold() {
 
                     // TO DO: creating an object with staked and unstaked nfts from the collection
 
-                    const tokenUri = await poolContract.methods
+                    let tokenUri = await poolContract.methods
                       .tokenURI(poolNftIndex)
                       .call();
+                    if(tokenUri.startsWith('ipfs://')) {
+                      let temp = tokenUri.replace("ipfs://", "https://nftstorage.link/ipfs/");
+                      tokenUri = temp;
+                    }
+                    console.log("fetching: " + tokenUri + "...");
                     const response = await fetch(
                       tokenUri.replace(
                         'ipfs://',
@@ -723,9 +728,12 @@ function Stronghold() {
                       if (
                         ownerAddress.toLowerCase() === address.toLowerCase()
                       ) {
-                        const tokenUri = await poolContract.methods
+                        let tokenUri = await poolContract.methods
                           .tokenURI(_tindex)
                           .call();
+                        tokenUri = tokenUri.replace('ipfs://', 'https://nftstorage.link/ipfs/');
+                        tokenUri = tokenUri.replace('https://gateway.pinata.cloud/ipfs/', 'https://nftstorage.link/ipfs/');
+                        console.log("734: calling --> " + tokenUri);
                         const response = await fetch(
                           tokenUri
                           // .replace(
@@ -743,8 +751,9 @@ function Stronghold() {
                   console.log(error);
                 }
               } else if (_pid == 2) {
+                console.log("---> enricreepto")
                 let tokenIdsArray = [];
-                for (let index = 0; index < 98; index++) {
+                for (let index = 0; index <= 102; index++) {
                   tokenIdsArray.push(index);
                 }
                 try {
@@ -753,12 +762,14 @@ function Stronghold() {
                       const ownerAddress = await poolContract.methods
                         .ownerOf(_tindex)
                         .call();
-                      if (
-                        ownerAddress.toLowerCase() === address.toLowerCase()
-                      ) {
+                      console.log("757");
+                      console.log(ownerAddress);
+                      if (ownerAddress.toLowerCase() === address.toLowerCase()) {
+                        console.log("match!")
                         const tokenUri = await poolContract.methods
                           .tokenURI(_tindex)
                           .call();
+                        // console.log({tokenUri});
                         const response = await fetch(
                           tokenUri.replace(
                             'ipfs://',
@@ -772,6 +783,7 @@ function Stronghold() {
                     })
                   );
                 } catch (error) {
+                  console.log("error-778");
                   console.log(error);
                 }
               }
@@ -784,15 +796,32 @@ function Stronghold() {
             try {
               await Promise.all(
                 stakedNftsIndex.map(async (_tid) => {
-                  const tokenUri = await poolContract.methods
+                  let tokenUri = await poolContract.methods
                     .tokenURI(_tid)
                     .call();
+                  // console.log(tokenUri);
+                  if(tokenUri.startsWith("https://gateway.pinata.cloud/")) {
+                    tokenUri = tokenUri.split("/").pop();
+                    tokenUri = "https://nftstorage.link/ipfs/" + tokenUri;
+                  }
+                  // tokenUri = tokenUri.split("/").pop() // getting CID only from url
+                  // tokenUri = "https://nftstorage.link/ipfs/" + tokenUri;
+                  // https://nftstorage.link/ipfs/bafybeibenq6ayp2wbhxr4rtjiqj2p7w47imggrnrmxwjpbclbmfkiip5ti
+                  // tokenUri = "https://" + tokenUri + ".ipfs.nftstorage.link/";
+                  console.log(`calling: ${tokenUri}`);
+                  if (!tokenUri) {
+                    throw new Error('Missing token Uri on ', stakedNfts[_tid])
+                  }
                   const response = await fetch(
-                    tokenUri.replace(
+                    tokenUri
+                    .replace(
                       'ipfs://',
                       'https://nftstorage.link/ipfs/'
                     )
-                  );
+                  ).catch(e => {
+                    console.error(e)
+                    throw e
+                  });
                   let jsonifyResp = await response.json();
                   jsonifyResp.tokenId = _tid;
                   stakedNftsInfo.push(jsonifyResp);
@@ -1435,16 +1464,15 @@ function Stronghold() {
                                       {pool.poolName.toString() ===
                                       'FantomSpecters'
                                         ? 'Fantom Specters'
-                                        : pool.poolName}
+                                        : ( pool.poolName.toString() == "enricreepto" ? "Creeptoghoul" : pool.poolName )}
                                     </Card.Title>
                                     <Row
                                       xs="auto"
                                       key={`row-1-${pool.poolId}`}
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        updateDisplaySection(
-                                          pool.poolId.toString()
-                                        );
+                                        updateDisplaySection(pool.poolId.toString());
+                                        // updateDisplaySection(pool.poolId.toString());
                                       }}
                                     >
                                       <Col key={`smcol-1-${pool.poolId}`}>
@@ -1765,17 +1793,20 @@ function Stronghold() {
                                         key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
                                         variant="top"
                                         src={
-                                          parseInt(pool.poolId) == 1 ||
-                                          parseInt(pool.poolId) == 2
+                                          (
+                                            (parseInt(pool.poolId) == 1 || parseInt(pool.poolId) == 2) 
+                                            && ("image" in id && id.image)
+                                          )
                                             ? id.image
-                                            : // .replace(
-                                              //     'https://nftstorage.link/ipfs/',
-                                              //     'https://nftstorage.link/ipfs/'
-                                              //   )
-                                              id.image.replace(
-                                                'ipfs://',
-                                                'https://nftstorage.link/ipfs/'
-                                              )
+                                            : ''
+                                            // : // .replace(
+                                            //   //     'https://nftstorage.link/ipfs/',
+                                            //   //     'https://nftstorage.link/ipfs/'
+                                            //   //   )
+                                            //   id.image.replace(
+                                            //     'ipfs://',
+                                            //     'https://nftstorage.link/ipfs/'
+                                            //   )
                                         }
                                       />
                                     )}
@@ -1899,8 +1930,8 @@ function Stronghold() {
                                         key={`cardimg-1-${pool.poolId}-${id.tokenId}`}
                                         variant="top"
                                         src={
-                                          parseInt(pool.poolId) == 1 ||
-                                          parseInt(pool.poolId) == 2
+                                            (parseInt(pool.poolId) == 1 || parseInt(pool.poolId) == 2) 
+                                            && ("image" in id && id.image)
                                             ? id.image
                                             : // .replace(
                                               //     'https://nftstorage.link/ipfs/',

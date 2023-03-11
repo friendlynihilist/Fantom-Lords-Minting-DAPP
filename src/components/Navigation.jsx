@@ -1,16 +1,50 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useInterval } from 'usehooks-ts';
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { connect } from '../redux/blockchain/blockchainActions';
 import { fetchData } from '../redux/data/dataActions';
 import { NavLink } from 'react-router-dom';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import * as s from '../styles/globalStyles';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import pslogo from '../assets/ps-icon.png';
 import nklogo from '../assets/nftkey-icon.png';
 import { StyledLogo } from './Stronghold';
+
+export const wiggle = keyframes`
+  @-webkit-keyframes wiggle {
+    0% {-webkit-transform: rotate(10deg);}
+    25% {-webkit-transform: rotate(-10deg);}
+    50% {-webkit-transform: rotate(20deg);}
+    75% {-webkit-transform: rotate(-5deg);}
+    100% {-webkit-transform: rotate(0deg);}
+  }
+
+  @-ms-keyframes wiggle {
+    0% {-ms-transform: rotate(1deg);}
+    25% {-ms-transform: rotate(-1deg);}
+    50% {-ms-transform: rotate(1.5deg);}
+    75% {-ms-transform: rotate(-5deg);}
+    100% {-ms-transform: rotate(0deg);}
+  }
+
+  @keyframes wiggle {
+    0% {transform: rotate(10deg);}
+    25% {transform: rotate(-10deg);}
+    50% {transform: rotate(20deg);}
+    75% {transform: rotate(-5deg);}
+    100% {transform: rotate(0deg);}
+  }
+`;
+
+export const DivMiniBonk = styled.div`
+  width: 100px;
+  height: 100px;
+  position: absolute;
+`;
 
 export const DivTitle = styled.span`
   text-shadow: 2px 4px var(--secondary);
@@ -57,9 +91,14 @@ const iconStyle = {
 };
 
 function Navigation() {
+  const location = useLocation()
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
+  const [miniBonkLeft, setMiniBonkLeft] = useState("-100px");
+  const [miniBonkTop, setMiniBonkTop] = useState("50vh");
+  const [miniBonkID, setMiniBonkID] = useState(0);
+  const [miniBonkDelay, setMiniBonkDelay] = useState(null);
   const [claimingNft, setClaimingNft] = useState(false);
   const [feedback, setFeedback] = useState(``);
   const [mintAmount, setMintAmount] = useState(1);
@@ -84,6 +123,13 @@ function Navigation() {
   const TOKENS_ARRAY = [];
   const [lords, setLords] = useState(null);
   const [isChecking, setIsChecking] = useState(false);
+
+  function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
 
   const getData = () => {
     if (blockchain.account !== '' && blockchain.smartContract !== null) {
@@ -110,12 +156,41 @@ function Navigation() {
   }
 
   useEffect(() => {
+    setMiniBonkID(getRandomInt(100,400));
+  }, []);
+
+  useEffect(() => {
+    setMiniBonkDelay(getRandomInt(3000, 10000));
+  }, []);
+
+
+  useEffect(() => {
     getConfig();
   }, []);
 
   useEffect(() => {
     getData();
   }, [blockchain.account]);
+
+
+  useInterval(
+    () => {
+      const newPos = [
+        ["-50vw", "-50vh"],
+        ["50vw", "50vh"],
+        ["70vw", "25vh"],
+        ["150vw", "25vh"],
+        ["-150vw", "250vh"],
+      ];
+      const _newPos = newPos[Math.floor(Math.random()*4)];
+      console.log("...BONK!...");
+      console.log({_newPos})
+      setMiniBonkLeft(_newPos[0]);
+      setMiniBonkTop(_newPos[1]);
+      setMiniBonkDelay(getRandomInt(500, 3000));
+    },
+    miniBonkDelay,
+  )
 
   return (
     <Navbar
@@ -128,6 +203,22 @@ function Navigation() {
         backgroundColor: 'var(--primary-dark)',
       }}
     >
+      { 
+        location.pathname == "/bonk" || location.pathname == "/dungeon" ?
+        null : 
+        <>
+          <DivMiniBonk
+            className={"rotating"}
+            style={{ 
+              left: miniBonkLeft,
+              top: miniBonkTop,
+              backgroundImage: `url('/config/images/miniBonk/${miniBonkID}.png')`, backgroundSize: "cover",
+              transition: "left 3s linear, top 3s linear"
+              }}
+            onClick={ (e) => window.location.href = "/bonk"}>
+          </DivMiniBonk>
+        </>
+      }
       <Container>
         <Navbar.Brand as={NavLink} to="/">
           <DivTitle>Fantom Lords</DivTitle>
@@ -214,6 +305,13 @@ function Navigation() {
             {/* <NavLink className="nav-link" to="/army">
               Army
             </NavLink> */}
+            {
+              location.pathname == "/bonk" ? <>
+                <NavLink className="nav-link" to="/bonk">
+                  Bonk
+                </NavLink>
+              </> : <></>
+            }
             <NavLink className="nav-link" to="/lore">
               Lore
             </NavLink>
@@ -228,6 +326,9 @@ function Navigation() {
             </NavLink>
             <NavLink className="nav-link" to="/dungeon">
               Dungeon
+            </NavLink>
+            <NavLink className="nav-link" to="/elden-linktree">
+              Linktree
             </NavLink>
           </Nav>
         </Navbar.Collapse>

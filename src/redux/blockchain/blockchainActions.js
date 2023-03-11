@@ -48,6 +48,10 @@ export const connect = () => {
       },
     });
     const CONFIG = await configResponse.json();
+    // // new
+    // const { ethereum } = window;
+    // const metamaskIsInstalled = ethereum && ( ethereum.isMetamask || ethereum.isBlockWallet );
+    // // old
     const { ethereum } = window;
     const metamaskIsInstalled = ethereum && ethereum.isMetaMask;
     if (metamaskIsInstalled) {

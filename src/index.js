@@ -10,7 +10,9 @@ import {
   Stronghold,
   Lore,
   Dungeon,
-  Ashsmith
+  Ashsmith,
+  Bonk,
+  EldenLinktree
 } from "./components";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
@@ -30,6 +32,8 @@ ReactDOM.render(
       <Route path="/ashsmith" element={<Ashsmith />} />
       <Route path="/pyre" element={<Pyre />} />
       <Route path="/dungeon" element={<Dungeon />} />
+      <Route path="/bonk" element={<Bonk />} />
+      <Route path="/elden-linktree" element={<EldenLinktree />} />
     </Routes>
     <Footer />
     </Router>
