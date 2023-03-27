@@ -175,6 +175,7 @@ function Navigation() {
 
   useInterval(
     () => {
+      return;
       const newPos = [
         ["-50vw", "-50vh"],
         ["50vw", "50vh"],
@@ -204,7 +205,7 @@ function Navigation() {
       }}
     >
       { 
-        location.pathname == "/bonk" || location.pathname == "/dungeon" ?
+        true || (location.pathname == "/bonk" || location.pathname == "/dungeon") ?
         null : 
         <>
           <DivMiniBonk
