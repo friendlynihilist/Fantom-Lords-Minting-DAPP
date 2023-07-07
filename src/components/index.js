@@ -7,4 +7,5 @@ export { default as Dungeon } from "./Dungeon";
 export { default as Ashsmith } from "./Ashsmith";
 export { default as Pyre } from "./Pyre";
 export { default as Bonk } from "./Bonk";
+export { default as Survive } from "./Survive";
 export { default as EldenLinktree } from "./EldenLinktree";

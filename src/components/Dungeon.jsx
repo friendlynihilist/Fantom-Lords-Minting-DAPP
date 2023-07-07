@@ -181,6 +181,7 @@ function Dungeon() {
   const TOKENS_ARRAY = [];
   const [lords, setLords] = useState(null);
   const [isChecking, setIsChecking] = useState(false);
+  const [leaderboardPlayers, setLeaderboardPlayers] = useState([]);
 
   const getData = () => {
     if (blockchain.account !== '' && blockchain.smartContract !== null) {
@@ -205,6 +206,22 @@ function Dungeon() {
     }
     return str;
   }
+
+  const getLeaderboard = async () => {
+    const endpoint = "https://api.fantomlords.com/fantom-lords/dungeon/leaderboard";
+    const response = await fetch(endpoint, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      }
+    });
+    const data = await response.json(); 
+    setLeaderboardPlayers(data.map( e => {return { address: e.address, score: e.score }}));
+  };
+
+  useEffect(() => {
+    getLeaderboard();
+  }, []);
 
   useEffect(() => {
     getConfig();
@@ -243,6 +260,27 @@ function Dungeon() {
 
             <s.SpacerLarge />
             <iframe frameborder="0" src="https://itch.io/embed-upload/6090638?color=333333" allowfullscreen="" width="1280" height="740"><a href="https://wolfgamesita.itch.io/fantom-lords-game">Play Fantom Lords Game on itch.io</a></iframe>
+            <s.SpacerLarge />
+            <s.SpacerLarge />
+            <HeaderTitle>
+              Leaderboard
+            </HeaderTitle>
+            <s.SpacerLarge />
+            {
+              leaderboardPlayers.map( player => {
+                return(
+                  <>
+                    <div style={{width: "60%", display: "flex", justifyContent: "space-between"}}>
+                      <a href={`https://ftmscan.com/address/${player.address}`} target={"_blank"}>
+                        <s.TextDescription style={{ color: 'var(--accent-text)' }}> { player.address } </s.TextDescription>
+                      </a>
+                      <s.TextDescription style={{ color: 'var(--accent-text)' }}> { player.score } </s.TextDescription>
+                    </div>
+                    <hr style={{ width: "60%", backgroundColor: "white" }} />
+                  </>
+                ); 
+              })
+            }
           </s.Container>
         </ResponsiveWrapper>
         <s.SpacerMedium />

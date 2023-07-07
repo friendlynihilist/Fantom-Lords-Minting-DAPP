@@ -10,6 +10,7 @@ import {
   Stronghold,
   Lore,
   Dungeon,
+  Survive,
   Ashsmith,
   Bonk,
   EldenLinktree
@@ -33,6 +34,7 @@ ReactDOM.render(
       <Route path="/pyre" element={<Pyre />} />
       <Route path="/dungeon" element={<Dungeon />} />
       <Route path="/bonk" element={<Bonk />} />
+      <Route path="/survive" element={<Survive />} />
       <Route path="/elden-linktree" element={<EldenLinktree />} />
     </Routes>
     <Footer />

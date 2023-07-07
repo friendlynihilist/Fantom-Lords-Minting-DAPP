@@ -313,11 +313,21 @@ function Navigation() {
                 </NavLink>
               </> : <></>
             }
+            {
+              location.pathname == "/bonenosher" ? <>
+                <NavLink className="nav-link" to="/bonenosher">
+                  Bonenosher
+                </NavLink>
+              </> : <></>
+            }
             <NavLink className="nav-link" to="/lore">
               Lore
             </NavLink>
-            <NavLink className="nav-link" to="/stronghold">
+            {/* <NavLink className="nav-link" to="/stronghold">
               Stronghold
+            </NavLink> */}
+            <NavLink className="nav-link" to="/survive">
+              Survive
             </NavLink>
             <NavLink className="nav-link" to="/ashsmith">
               Ashsmith
@@ -342,6 +352,7 @@ function Navigation() {
                   <StyledButton
                     onClick={(e) => {
                       // startTrack();
+                      console.log("testing")
                       e.preventDefault();
                       dispatch(connect());
                       getData();

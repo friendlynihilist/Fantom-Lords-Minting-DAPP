@@ -1,50 +1,56 @@
 {
-  "name": "hashlips_nft_minting_dapp",
-  "version": "1.0.0",
-  "description": "HashLips minting dapp is a quick and easy way to connect your smart contract and start minting NFTs.",
-  "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-brands-svg-icons": "^5.15.4",
-    "@fortawesome/free-regular-svg-icons": "^5.15.4",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-fontawesome": "^0.1.16",
-    "bootstrap": "^5.1.3",
-    "react": "^17.0.2",
-    "react-bootstrap": "^2.1.2",
-    "react-dom": "^17.0.2",
-    "react-h5-audio-player": "^3.8.0",
-    "react-redux": "^7.2.4",
-    "react-responsive": "^9.0.0-beta.6",
-    "react-router-dom": "^6.2.1",
-    "react-scripts": "4.0.3",
-    "react-typewriter-effect": "^1.1.0",
-    "redux": "^4.1.1",
-    "redux-thunk": "^2.3.0",
-    "styled-components": "^5.3.0",
-    "usehooks-ts": "^2.9.1",
-    "web-vitals": "^1.0.1"
-  },
-  "author": "Daniel Eugene Botha (HashLips)",
-  "license": "MIT",
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "web3": "^1.7.3",
-    "web3-eth-contract": "^1.7.3"
-  }
+    "name": "hashlips_nft_minting_dapp",
+    "version": "1.0.0",
+    "description": "HashLips minting dapp is a quick and easy way to connect your smart contract and start minting NFTs.",
+    "private": true,
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^1.2.36",
+        "@fortawesome/free-brands-svg-icons": "^5.15.4",
+        "@fortawesome/free-regular-svg-icons": "^5.15.4",
+        "@fortawesome/free-solid-svg-icons": "^5.15.4",
+        "@fortawesome/react-fontawesome": "^0.1.16",
+        "bootstrap": "^5.1.3",
+        "https-browserify": "^1.0.0",
+        "react": "^17.0.2",
+        "react-bootstrap": "^2.1.2",
+        "react-dom": "^17.0.2",
+        "react-h5-audio-player": "^3.8.0",
+        "react-redux": "^7.2.4",
+        "react-responsive": "^9.0.0-beta.6",
+        "react-router-dom": "^6.2.1",
+        "react-scripts": "^5.0.1",
+        "react-typewriter-effect": "^1.1.0",
+        "redux": "^4.1.1",
+        "redux-thunk": "^2.3.0",
+        "stream-browserify": "^3.0.0",
+        "stream-http": "^3.2.0",
+        "styled-components": "^5.3.0",
+        "usehooks-ts": "^2.9.1",
+        "web-vitals": "^1.0.1",
+        "web3": "^1.7.3",
+        "web3-eth-contract": "^1.7.3"
+    },
+    "author": "Daniel Eugene Botha (HashLips)",
+    "license": "MIT",
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "eject": "react-scripts eject"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+        "buffer": "^6.0.3"
+    }
 }
